@@ -43,6 +43,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
                 x &= all_pairs
             self._xarr = x
         return self._xarr
+
     @classmethod
     def clashes(cls, ops) -> bool:
         # various pathologies. causes some cards to be too difficult to play on
@@ -55,7 +56,9 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
                     if len(set(op1.what) & set(op2.what)) < 3:
                         # Ex. even high card -> (12,), confusingly narrow
                         return True
-        if len(ocmp_ops) == 1 and ocmp_ops[0].kind == 'num' and left_ops and not right_ops:
+        if (11,12,13) in what(ops) and ('<' in what(ops) or '>' in what(ops)):
+            return True
+        elif len(ocmp_ops) == 1 and ocmp_ops[0].kind == 'num' and left_ops and not right_ops:
             # Motivation: "You may not play a higher card on a spade" - well then what to do on low spade?
             allowed_numbers = set(range(1,14))
             for o in left_ops:
@@ -72,17 +75,14 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             # it is the player's job to identify and get rid of those
             return False
 
-
-
-    def bad_representation(self) -> list['Op']:
+    def bad_representations(self) -> list['Op']:
         if self.side == 'ocmp' and self.kind == 'color':
             # same/different color on a spade -> red/black on a spade
-            return [Op(side, 'suit', suits) for suits in SUITS_WORDS for side in ('left', 'right')]
+            return [Op(side, 'suit', suits) for suits in SUIT_WORDS for side in ('left', 'right')]
         elif self.kind == 'suit':
             return [Op('ocmp', 'color', '=='), Op('ocmp', 'color', '!='), Op('ocmp', 'suit', '==')]
         else:
             return []
-
 
     def overlaps(self) -> list['Op']:
         # Any Op that is stricter than this one
@@ -99,6 +99,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             return [Op(self.side, self.kind, (4,8,12))]
         else:
             return []
+
     def complements(self) -> list['Op']:
         # Any Op that is the opposite of this one
         # this & other == null and this | other == all
@@ -126,12 +127,15 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             elif self.kind == 'suit' and self.what == '==':
                 ret.append(Op(self.side, 'color', '!='))
         elif self.kind == 'suit':
-            ret.extend([Op(self.side, 'suit', suit) for suit in SUITS_WORDS if len(set(suit) & set(self.what)) == 0])
+            ret.extend([Op(self.side, 'suit', suit) for suit in SUIT_WORDS if len(set(suit) & set(self.what)) == 0])
         elif self.what == (11,12,13):
             ret.append(Op(self.side, 'num', tuple(range(1, 8))))
         elif self.what == tuple(range(1, 8)):
             ret.append(Op(self.side, 'num', (11,12,13)))
         return ret + self.complements()
+
+def what(ops):
+    return [o.what for o in ops]
 
 all_pairs = xr.DataArray(
     data = [[[[1]*4]*13]*4]*13,

@@ -6,14 +6,14 @@ class Filter:
         self.ops = unify(ops)
         assert isinstance(self.ops, tuple)
         assert all(isinstance(o, Op) for o in self.ops)
-        self.left_ops = [o for o in ops if o.side == 'left']
-        self.ocmp_ops = [o for o in ops if o.side == 'ocmp']
-        self.right_ops = [o for o in ops if o.side == 'right']
+        self.left_ops = [o for o in self.ops if o.side == 'left']
+        self.ocmp_ops = [o for o in self.ops if o.side == 'ocmp']
+        self.right_ops = [o for o in self.ops if o.side == 'right']
         self.xarr = xarr
 
     @classmethod
     def from_ops(self, ops):
-        xarr = ops[0].xarr()
+        xarr = ops[0].xarr().copy()
         for o in ops[1:]:
             xarr &= o.xarr()
         return Filter(ops, xarr)
@@ -43,9 +43,9 @@ class Filter:
         left_words = [o.word for o in self.left_ops]
         ocmp_words = [o.word for o in self.ocmp_ops]
         right_words = [o.word for o in self.right_ops]
-        left_chunk = ', '.join(left_words)
-        right_chunk = ', '.join(ocmp_words + right_words)
-        all_chunks = ["You may not play a", left_chunk, "card on a", right_chunk, "card"]
+        left_chunk = ', '.join(ocmp_words + left_words)
+        right_chunk = ', '.join(right_words)
+        all_chunks = ["You may not play a", right_chunk, "card on a", left_chunk, "card"]
         return " ".join([c for c in all_chunks if c])
 
 
@@ -95,34 +95,10 @@ def test_nullities():
     other_f = FILTERS_BY_NAME[other_op]
     assert nullities((f | other_f).xarr)
 
-CLASHES = {}
-
-def clashes(op):
-    if not op in CLASHES:
-        ret = set()
-        if op.complements():
-            return op.complements()
-        elif op in FILTERS_BY_NAME:
-            this_f = FILTERS_BY_NAME[op]
-        else:
-            return []
-        size = this_f.size
-        for other_op, other_f in FILTERS_BY_NAME.items():
-            if other_op != op:
-                orred = this_f | other_f
-                if orred.xarr.all().item() or orred.size == size or orred.size == other_f.size:
-                    ret.add(other_op)
-        CLASHES[op] = ret
-    return CLASHES[op]
-
-def test_clashes():
-    o = ('left', 'suit', ('D', 'H'))
-    assert ('left', 'suit', ('C', 'S')) in clashes(o)
 
 from itertools import combinations
 import random
 def cards():
-    returned_keys = set()
     combos = list(combinations(ALL_OPS, 3))
     random.shuffle(combos)
     blacklist = set()
@@ -130,18 +106,21 @@ def cards():
         ops = tuple(sorted(unify(c)))
         if ops in blacklist:
             continue
+        elif Op.clashes(ops):
+            continue
         else:
+            enemies = sum([o.disjoints() + o.bad_representations() for o in ops], [])
+            if len(set(enemies) & set(ops)) > 1:
+                continue
             f = Filter.from_ops(c)
-            if f.size_ok() and not nullities(f.xarr) and not f.ocmp_num_clash() and not f.omcp_suit_clash():
+            if f.size_ok() and not nullities(f.xarr):
                 for i, this_op in enumerate(ops):
                     if this_op.side in f.lonely_sides():
-                        for a in clashes(this_op):
+                        for a in this_op.complements():
                             new_ops = [*ops]
                             new_ops[i] = a
                             blacklist.add(tuple(sorted(new_ops)))
-                if f.ops not in returned_keys:
-                    returned_keys.add(f.ops)
-                    yield f
+                yield f
 
 
 c = list(cards())
