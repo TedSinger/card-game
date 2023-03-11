@@ -3,13 +3,20 @@ from ops import ALL_OPS, Op, all_pairs, SUITS
 
 class Filter:    
     def __init__(self, ops, xarr):
-        self.ops = unify_recursive(ops)
+        self.ops = unify(ops)
         assert isinstance(self.ops, tuple)
         assert all(isinstance(o, Op) for o in self.ops)
         self.left_ops = [o for o in ops if o.side == 'left']
         self.ocmp_ops = [o for o in ops if o.side == 'ocmp']
         self.right_ops = [o for o in ops if o.side == 'right']
         self.xarr = xarr
+
+    @classmethod
+    def from_ops(self, ops):
+        xarr = ops[0].xarr()
+        for o in ops[1:]:
+            xarr &= o.xarr()
+        return Filter(ops, xarr)
 
     def __and__(self, other):
         return Filter(self.ops + other.ops, self.xarr & other.xarr)
@@ -82,28 +89,18 @@ def nullities(xarr):
     # FIXME: it's also bad if some cards have very few ways to play on them
     return xarr.all('leftnum').all('leftsuit').any().item() or xarr.all('rightnum').all('rightsuit').any().item()
 
-def unify(a, b):
-    # FIXME: high/face on a low
-    if a.side == b.side and a.side in ['left', 'right']:
-        if a.kind == 'suit' == b.kind:
-            return [Op(a.side, a.kind, tuple(sorted(set(a.what) & set(b.what))))]
-        elif a.kind == 'num' == b.kind:
-            if {a.what, b.what} == {(11,12,13), (8,9,10,11,12,13)}:
-                return [Op(a.side, a.kind, (11,12,13))]
-            elif {a.what, b.what} == {(4,8,12), (2,4,6,8,12)}:
-                return [Op(a.side, a.kind, (4,8,12))]
-            else:
-                return [a, b]
-    return [a,b]
 
-def unify_recursive(ops):
-    for i, lop in enumerate(ops):
-        for j, rop in enumerate(ops):
-            if i < j:
-                u = unify(lop, rop)
-                if len(u) == 1:
-                    return unify_recursive(u + [o for k, o in enumerate(ops) if k != i and k != j])
-    return tuple(sorted(set(ops)))
+def unify(ops):
+    ret = []
+    for o in ops:
+        dominated = False
+        for stricter in o.overlaps():
+            if stricter in ops:
+                dominated = True
+        if not dominated:
+            ret.append(o)
+    return tuple(sorted(ret))
+
 FILTERS = [Filter([o], o.xarr()) for o in ALL_OPS]
 FILTERS_BY_NAME = {list(f.ops)[0]:f for f in FILTERS}
 
@@ -135,16 +132,11 @@ def test_nullities():
 
 CLASHES = {}
 
-def opposite(op):
-    return (op.side, op.kind, tuple(sorted(set(SUITS) - set(op.what))))
-
 def clashes(op):
     if not op in CLASHES:
         ret = set()
-        if op.side in ('left', 'right') and op.kind == 'suit':
-            return [opposite(op)]
-        elif op.side == 'ocmp' and op.kind == 'num':
-            return [('ocmp', 'num', '<>'['><'.index(op.what)])]
+        if op.complements():
+            return op.complements()
         elif op in FILTERS_BY_NAME:
             this_f = FILTERS_BY_NAME[op]
         else:
@@ -166,18 +158,18 @@ from itertools import combinations
 import random
 def cards():
     returned_keys = set()
-    combos = list(combinations(FILTERS, 3))
+    combos = list(combinations(ALL_OPS, 3))
     random.shuffle(combos)
     blacklist = set()
     for c in combos:
-        ops = tuple(sorted(unify_recursive([o for f in c for o in f.ops])))
+        ops = tuple(sorted(unify(c)))
         if ops in blacklist:
             continue
         elif any(((o.side != 'ocmp') and (o.kind == 'num') and (len(o.what) < 3) for o in ops)):
             # a restriction to just two allowed numbers is not ok. face & odd -> (11, 13) for example
             continue
         else:
-            f = c[0] & c[1] & c[2]
+            f = Filter.from_ops(c)
             if f.size_ok() and not nullities(f.xarr) and not f.ocmp_num_clash() and not f.omcp_suit_clash():
                 for i, this_op in enumerate(ops):
                     if this_op.side in f.lonely_sides():
