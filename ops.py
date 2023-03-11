@@ -1,6 +1,6 @@
 import xarray as xr
 from collections import Counter, namedtuple
-
+from itertools import combinations
 
 class Op(namedtuple("Op", ["side", "kind", "what"])):
     # FIXME: maybe START with the word and lookup the implementation
@@ -45,19 +45,43 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
         return self._xarr
     @classmethod
     def clashes(cls, ops) -> bool:
-        # various pathologies. either it causes some cards to be too difficult to play on, or it makes a rule confusing
-        # even&face
-        # suit&<
-        # low&<
+        # various pathologies. causes some cards to be too difficult to play on
+        left_ops = [o for o in ops if o.side == 'left']
+        ocmp_ops = [o for o in ops if o.side == 'ocmp']
+        right_ops = [o for o in ops if o.side == 'right']
+        for group in left_ops, right_ops:
+            for op1, op2 in combinations(group, 2):
+                if op1.kind == op2.kind == 'num':
+                    if len(set(op1.what) & set(op2.what)) < 3:
+                        # Ex. even high card -> (12,), confusingly narrow
+                        return True
+        if len(ocmp_ops) == 1 and ocmp_ops[0].kind == 'num' and left_ops and not right_ops:
+            # Motivation: "You may not play a higher card on a spade" - well then what to do on low spade?
+            allowed_numbers = set(range(1,14))
+            for o in left_ops:
+                if o.kind == 'num':
+                    allowed_numbers &= set(o.what)
+            ocmp = ocmp_ops[0]
+            if ocmp.what == '<':
+                return min(allowed_numbers) < 4
+            else:
+                return max(allowed_numbers) > 10
+        else:
+            # left_ops and right_ops -> conditions on both sides. no pathologies
+            # right_ops and not left_ops -> it's actually ok for some cards to be nearly unplayable.
+            # it is the player's job to identify and get rid of those
+            return False
 
-        ocmp_color = False
-        side_color = False
-        for side, kind, _ in self.ops:
-            if side == 'ocmp' and kind in ('color', 'suit'):
-                ocmp_color = True
-            if side in ('left', 'right') and kind == 'suit':
-                side_color = True
-        return ocmp_color and side_color
+
+
+    def bad_representation(self) -> list['Op']:
+        if self.side == 'ocmp' and self.kind == 'color':
+            # same/different color on a spade -> red/black on a spade
+            return [Op(side, 'suit', suits) for suits in SUITS_WORDS for side in ('left', 'right')]
+        elif self.kind == 'suit':
+            return [Op('ocmp', 'color', '=='), Op('ocmp', 'color', '!='), Op('ocmp', 'suit', '==')]
+        else:
+            return []
 
 
     def overlaps(self) -> list['Op']:

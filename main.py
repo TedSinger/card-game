@@ -39,41 +39,6 @@ class Filter:
         sides = Counter([side for side, *_ in self.ops])
         return [s for s, c in sides.items() if c == 1]
 
-    def ocmp_num_clash(self):
-        if self.ocmp_ops:
-            # low <
-            biased_sides = set()
-            right_features = 0
-            for side, kind, cond in self.ops:
-                if kind == 'num' and side != 'ocmp':
-                    if 7 < min(cond) or 8 > max(cond):
-                        biased_sides.add(side)
-                if side == 'right' or (side == 'ocmp' and kind != 'num'):
-                    right_features += 1
-            if len(biased_sides) % 2 == 1:
-                # (('left', 'num', 'low'), ('ocmp', 'num', '<'))
-                # kinda redundant
-                return True
-            elif right_features == 0:
-                # (('left', 'suit', ('C',)), ('ocmp', 'num', '<'))
-                # very difficult to play anything on 1C
-                return True
-            else:
-                return False
-        else:
-            return False
-    def omcp_suit_clash(self):
-        if ('ocmp', 'color', '!=') in self.ops and ('ocmp', 'suit', '==') in self.ops:
-            return True
-        ocmp_color = False
-        side_color = False
-        for side, kind, _ in self.ops:
-            if side == 'ocmp' and kind in ('color', 'suit'):
-                ocmp_color = True
-            if side in ('left', 'right') and kind == 'suit':
-                side_color = True
-        return ocmp_color and side_color
-
     def as_text(self):
         left_words = [o.word for o in self.left_ops]
         ocmp_words = [o.word for o in self.ocmp_ops]
@@ -164,9 +129,6 @@ def cards():
     for c in combos:
         ops = tuple(sorted(unify(c)))
         if ops in blacklist:
-            continue
-        elif any(((o.side != 'ocmp') and (o.kind == 'num') and (len(o.what) < 3) for o in ops)):
-            # a restriction to just two allowed numbers is not ok. face & odd -> (11, 13) for example
             continue
         else:
             f = Filter.from_ops(c)
