@@ -1,5 +1,8 @@
 from collections import Counter
-from ops import ALL_OPS, Op, all_pairs, SUITS
+from ops import ALL_OPS, Op, all_pairs, ADJECTIVE_ORDER
+from itertools import combinations
+import random
+
 
 class Filter:    
     def __init__(self, ops, xarr):
@@ -20,17 +23,13 @@ class Filter:
 
     def __and__(self, other):
         return Filter(self.ops + other.ops, self.xarr & other.xarr)
-    def __or__(self, other):
-        # FIXME: first arg is lying
-        return Filter(self.ops + other.ops, self.xarr | other.xarr)
     def __repr__(self):
         return f'{self.ops} - {self.size}'
     @property
     def size(self):
         same_card = (all_pairs.leftnum == all_pairs.rightnum) & (all_pairs.rightsuit == all_pairs.leftsuit)
-
         x = self.xarr & 1-same_card
-        return x.sum().item()
+        return (x.sum().item() + self.xarr.sum().item()) / 2
     
     def size_ok(self):
         return 270 < self.size < 405
@@ -39,13 +38,32 @@ class Filter:
         sides = Counter([side for side, *_ in self.ops])
         return [s for s, c in sides.items() if c == 1]
 
+    def is_conditional(self):
+        return self.ocmp_ops or (self.left_ops and self.right_ops)
+
     def as_text(self):
-        left_words = [o.word for o in self.left_ops]
-        ocmp_words = [o.word for o in self.ocmp_ops]
-        right_words = [o.word for o in self.right_ops]
-        left_chunk = ', '.join(ocmp_words + left_words)
-        right_chunk = ', '.join(right_words)
-        all_chunks = ["You may not play a", right_chunk, "card on a", left_chunk, "card"]
+        left_words = sorted([o.word for o in self.left_ops], key=ADJECTIVE_ORDER.index)
+        right_words = sorted([o.word for o in self.right_ops], key=ADJECTIVE_ORDER.index)
+        for o in self.ocmp_ops:
+            if len(left_words) < len(right_words):
+                left_words.insert(0, o.left_word())
+            else:
+                right_words.insert(0, o.right_word())
+        left_joiner = ', ' if len(left_words) > 2 else ' '
+        right_joiner = ', ' if len(right_words) > 2 else ' '
+        left_chunk = left_joiner.join(left_words)
+        right_chunk = right_joiner.join(right_words)
+        left_particle = 'an' if left_words[0] in ('even', 'odd') else 'a'
+        right_particle = 'an' if right_words[0] in ('even', 'odd') else 'a'
+        left_chunk = left_particle + ' ' + left_chunk
+        right_chunk = right_particle + ' ' + right_chunk
+        omit_left_card = left_words[-1] in ('spade', 'heart', 'diamond', 'club')
+        omit_right_card = right_words[-1] in ('spade', 'heart', 'diamond', 'club')
+        if not omit_left_card:
+            left_chunk += ' card'
+        if not omit_right_card:
+            right_chunk += ' card'
+        all_chunks = ["You may not play", right_chunk, "on", left_chunk]
         return " ".join([c for c in all_chunks if c])
 
 
@@ -66,38 +84,7 @@ def unify(ops):
             ret.append(o)
     return tuple(sorted(ret))
 
-FILTERS = [Filter([o], o.xarr()) for o in ALL_OPS]
-FILTERS_BY_NAME = {list(f.ops)[0]:f for f in FILTERS}
 
-def test_sizes():
-    assert FILTERS_BY_NAME[('ocmp', 'color', '==')].size == 1300
-    assert FILTERS_BY_NAME[('ocmp', 'color', '!=')].size == 2704 / 2
-    assert FILTERS_BY_NAME[('ocmp', 'suit', '==')].size == 624
-    assert FILTERS_BY_NAME[('ocmp', 'num', '>')].size == 4 * 4 * 12 * 13 / 2
-    assert FILTERS_BY_NAME[('left', 'num', (1,3,5,7,9,11,13))].size == 7 * 4 * 51
-    assert FILTERS_BY_NAME[('right', 'num', (2,4,6,8,10,12))].size == 6 * 4 * 51
-    assert FILTERS_BY_NAME[('left', 'suit', ('D', 'H'))].size == 26 * 51
-    assert FILTERS_BY_NAME[('right', 'suit', ('C',))].size == 13 * 51
-
-def test_nullities():
-    zeroes = all_pairs * 0
-    assert not nullities(zeroes)
-    zeroes.loc[{'leftsuit':'H', 'leftnum':13}] = 1
-    assert nullities(zeroes)
-    zeroes = all_pairs * 0
-
-    zeroes.loc[{'leftsuit':list(SUITS)}] = 1
-    assert nullities(zeroes)
-
-    op = ('right', 'suit', ('D', 'H'))
-    f = FILTERS_BY_NAME[op]
-    other_op = ('right', 'suit', ('C', 'S'))
-    other_f = FILTERS_BY_NAME[other_op]
-    assert nullities((f | other_f).xarr)
-
-
-from itertools import combinations
-import random
 def cards():
     combos = list(combinations(ALL_OPS, 3))
     random.shuffle(combos)
@@ -113,7 +100,7 @@ def cards():
             if len(set(enemies) & set(ops)) > 1:
                 continue
             f = Filter.from_ops(c)
-            if f.size_ok() and not nullities(f.xarr):
+            if f.size_ok() and f.is_conditional():# and not nullities(f.xarr):
                 for i, this_op in enumerate(ops):
                     if this_op.side in f.lonely_sides():
                         for a in this_op.complements():

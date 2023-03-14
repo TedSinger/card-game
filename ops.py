@@ -18,6 +18,24 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             else:
                 return [k for k, v in NUM_WORDS.items() if v == self.what][0]
 
+    def left_word(self):
+        if self.what == '<':
+            return 'lower'
+        elif self.what == '>':
+            return 'higher'
+        else:
+            return self.word
+
+    def right_word(self):
+        if self.what == '<':
+            return 'higher'
+        elif self.what == '>':
+            return 'lower'
+        else:
+            return self.word
+
+
+
     def xarr(self):
         if not hasattr(self, '_xarr'):
             x = all_pairs.copy()
@@ -163,7 +181,7 @@ NUM_WORDS = {
     'trio': (3, 6, 9, 12),
 }
 
-
+ADJECTIVE_ORDER = ['high', 'low', 'odd', 'even', 'red', 'black', 'quartet', 'trio', 'spade','heart','diamond','club', 'face']
 
 SUITS = 'SHCD'
 COLORS = [('C', 'S'), ('D', 'H')]
