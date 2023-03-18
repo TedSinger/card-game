@@ -2,15 +2,15 @@ import itertools
 import random
 
 class Example:
-    def __init__(self, inverted_ops, leftnum, leftsuit, rightnum, rightsuit):
-        self.leftnum = leftnum
-        self.leftsuit = leftsuit
-        self.rightnum = rightnum
-        self.rightsuit = rightsuit
+    def __init__(self, inverted_ops, lastnum, lastsuit, newnum, newsuit):
+        self.lastnum = lastnum
+        self.lastsuit = lastsuit
+        self.newnum = newnum
+        self.newsuit = newsuit
         self.inverted_ops = inverted_ops
 
     def __repr__(self):
-        return f"{self.leftnum}{self.leftsuit}->{self.rightnum}{self.rightsuit}, {self.inverted_ops}"
+        return f"{self.lastnum}{self.lastsuit}->{self.newnum}{self.newsuit}, {self.inverted_ops}"
 
     def as_text(self):
         return f""
@@ -22,9 +22,9 @@ class ExampleFinder:
         self._pairs = itertools.cycle(all_pairs)
 
     def _find(self, xarr):
-        for (leftnum, leftsuit, rightnum, rightsuit) in self._pairs:
-            if xarr.loc[{'leftnum':leftnum,'rightnum':rightnum,'leftsuit':leftsuit,'rightsuit':rightsuit}].sum().item():
-                return (leftnum, leftsuit, rightnum, rightsuit)
+        for (lastnum, lastsuit, newnum, newsuit) in self._pairs:
+            if xarr.loc[{'lastnum':lastnum,'newnum':newnum,'lastsuit':lastsuit,'newsuit':newsuit}].sum().item():
+                return (lastnum, lastsuit, newnum, newsuit)
 
     def get_examples(self, f):
         # FIXME: would like the set of examples to have as few differences as possible
@@ -36,8 +36,8 @@ class ExampleFinder:
             for o in other_ops:
                 xarr &= o.xarr()
             if xarr.any():
-                # left low, >, right low will have no counterexamples violating only right low
-                # FIXME: left DH, suit==, right DH doesn't get the full suite of counterexamples, but it could
+                # last low, >, new low will have no counterexamples violating only new low
+                # FIXME: last DH, suit==, new DH doesn't get the full suite of counterexamples, but it could
                 false_example = self._find(xarr)
                 examples.append(Example([op], *false_example))
         return examples

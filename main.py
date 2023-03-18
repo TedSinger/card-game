@@ -9,9 +9,9 @@ class Filter:
         self.ops = unify(ops)
         assert isinstance(self.ops, tuple)
         assert all(isinstance(o, Op) for o in self.ops)
-        self.left_ops = [o for o in self.ops if o.side == 'left']
+        self.last_ops = [o for o in self.ops if o.side == 'last']
         self.ocmp_ops = [o for o in self.ops if o.side == 'ocmp']
-        self.right_ops = [o for o in self.ops if o.side == 'right']
+        self.new_ops = [o for o in self.ops if o.side == 'new']
         self.xarr = xarr
 
     @classmethod
@@ -27,7 +27,7 @@ class Filter:
         return f'{self.ops} - {self.size}'
     @property
     def size(self):
-        same_card = (all_pairs.leftnum == all_pairs.rightnum) & (all_pairs.rightsuit == all_pairs.leftsuit)
+        same_card = (all_pairs.lastnum == all_pairs.newnum) & (all_pairs.newsuit == all_pairs.lastsuit)
         x = self.xarr & 1-same_card
         return (x.sum().item() + self.xarr.sum().item()) / 2
     
@@ -39,19 +39,19 @@ class Filter:
         return [s for s, c in sides.items() if c == 1]
 
     def is_conditional(self):
-        return self.ocmp_ops or (self.left_ops and self.right_ops)
+        return self.ocmp_ops or (self.last_ops and self.new_ops)
 
     def as_text(self):
-        left_words = sorted([o.word for o in self.left_ops], key=ADJECTIVE_ORDER.index)
-        right_words = sorted([o.word for o in self.right_ops], key=ADJECTIVE_ORDER.index)
+        last_words = sorted([o.word for o in self.last_ops], key=ADJECTIVE_ORDER.index)
+        new_words = sorted([o.word for o in self.new_ops], key=ADJECTIVE_ORDER.index)
         for o in self.ocmp_ops:
-            if len(left_words) < len(right_words):
-                left_words.insert(0, o.left_word())
+            if len(last_words) < len(new_words):
+                last_words.insert(0, o.last_word())
             else:
-                right_words.insert(0, o.right_word())
-        left_chunk = _fmt_words(left_words)
-        right_chunk = _fmt_words(right_words)
-        all_chunks = ["You may not play", right_chunk, "on", left_chunk]
+                new_words.insert(0, o.new_word())
+        last_chunk = _fmt_words(last_words)
+        new_chunk = _fmt_words(new_words)
+        all_chunks = ["You may not play", new_chunk, "on", last_chunk]
         return " ".join([c for c in all_chunks if c])
 
 
@@ -65,11 +65,6 @@ def _fmt_words(words):
     if not omit_card:
         chunk += ' card'
     return chunk
-
-def nullities(xarr):
-    # want to check it does not make it impossible to place or place on certain cards
-    # FIXME: it's also bad if some cards have very few ways to play on them
-    return xarr.all('leftnum').all('leftsuit').any().item() or xarr.all('rightnum').all('rightsuit').any().item()
 
 
 def unify(ops):
@@ -99,13 +94,13 @@ def cards():
             if len(set(enemies) & set(ops)) > 1:
                 continue
             f = Filter.from_ops(c)
-            if f.size_ok() and f.is_conditional():# and not nullities(f.xarr):
+            if f.size_ok() and f.is_conditional():
                 for i, this_op in enumerate(ops):
                     if this_op.side in f.lonely_sides():
                         for a in this_op.complements():
-                            new_ops = [*ops]
-                            new_ops[i] = a
-                            blacklist.add(tuple(sorted(new_ops)))
+                            blacklist_ops = [*ops]
+                            blacklist_ops[i] = a
+                            blacklist.add(tuple(sorted(blacklist_ops)))
                 yield f
 
 
@@ -126,9 +121,9 @@ FILTERS = list(cards())
 #     to_remove_list.append(to_remove)
 #     bad_pairs = [b for b in bad_pairs if to_remove not in b]
 # good_indices = set(range(len(c))) - set(to_remove_list)
-# q = [(c[left].xarr & c[right].xarr).sum().item() for left in good_indices for right in good_indices if right > left]
+# q = [(c[last].xarr & c[new].xarr).sum().item() for last in good_indices for new in good_indices if new > last]
 # e = Counter(q)
 # sorted(e.items())
-# q = [(c[left].xarr & c[right].xarr).sum().item() for left in range(len(c)) for right in range(len(c)) if right > left]
+# q = [(c[last].xarr & c[new].xarr).sum().item() for last in range(len(c)) for new in range(len(c)) if new > last]
 # e = Counter(q)
 # sorted(e.items())

@@ -8,7 +8,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
     def word(self):
         if self.side == 'ocmp':
             if self.kind == 'num':
-                # the word is describing the left card
+                # the word is describing the last card
                 return 'lower' if self.what == '<' else 'higher'
             else:
                 return f'different {self.kind}' if self.what == '!=' else f'same {self.kind}'
@@ -18,7 +18,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             else:
                 return [k for k, v in NUM_WORDS.items() if v == self.what][0]
 
-    def left_word(self):
+    def last_word(self):
         if self.what == '<':
             return 'lower'
         elif self.what == '>':
@@ -26,7 +26,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
         else:
             return self.word
 
-    def right_word(self):
+    def new_word(self):
         if self.what == '<':
             return 'higher'
         elif self.what == '>':
@@ -42,16 +42,16 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             if self.side == 'ocmp':
                 if self.kind == 'num':
                     if self.what == '>':
-                        mask = x.leftnum > x.rightnum
+                        mask = x.lastnum > x.newnum
                     else:
-                        mask = x.leftnum < x.rightnum
+                        mask = x.lastnum < x.newnum
                 elif self.kind == 'suit':
                     if self.what == '==':
-                        mask = x.leftsuit == x.rightsuit
+                        mask = x.lastsuit == x.newsuit
                     else:
-                        mask = x.leftsuit != x.rightsuit
+                        mask = x.lastsuit != x.newsuit
                 else: # color
-                    mask = x.leftsuit.isin(['C', 'S']) ^ x.rightsuit.isin(['C', 'S'])
+                    mask = x.lastsuit.isin(['C', 'S']) ^ x.newsuit.isin(['C', 'S'])
                     if self.what == '==':
                         mask = 1-mask
                 x &= mask
@@ -65,10 +65,10 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
     @classmethod
     def clashes(cls, ops) -> bool:
         # various pathologies. causes some cards to be too difficult to play on
-        left_ops = [o for o in ops if o.side == 'left']
+        last_ops = [o for o in ops if o.side == 'last']
         ocmp_ops = [o for o in ops if o.side == 'ocmp']
-        right_ops = [o for o in ops if o.side == 'right']
-        for group in left_ops, right_ops:
+        new_ops = [o for o in ops if o.side == 'new']
+        for group in last_ops, new_ops:
             for op1, op2 in combinations(group, 2):
                 if op1.kind == op2.kind == 'num':
                     if len(set(op1.what) & set(op2.what)) < 3:
@@ -76,10 +76,10 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
                         return True
         if (11,12,13) in what(ops) and ('<' in what(ops) or '>' in what(ops)):
             return True
-        elif len(ocmp_ops) == 1 and ocmp_ops[0].kind == 'num' and left_ops and not right_ops:
+        elif len(ocmp_ops) == 1 and ocmp_ops[0].kind == 'num' and last_ops and not new_ops:
             # Motivation: "You may not play a higher card on a spade" - well then what to do on low spade?
             allowed_numbers = set(range(1,14))
-            for o in left_ops:
+            for o in last_ops:
                 if o.kind == 'num':
                     allowed_numbers &= set(o.what)
             ocmp = ocmp_ops[0]
@@ -88,15 +88,15 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             else:
                 return max(allowed_numbers) > 10
         else:
-            # left_ops and right_ops -> conditions on both sides. no pathologies
-            # right_ops and not left_ops -> it's actually ok for some cards to be nearly unplayable.
+            # last_ops and new_ops -> conditions on both sides. no pathologies
+            # new_ops and not last_ops -> it's actually ok for some cards to be nearly unplayable.
             # it is the player's job to identify and get rid of those
             return False
 
     def bad_representations(self) -> list['Op']:
         if self.side == 'ocmp' and self.kind == 'color':
             # same/different color on a spade -> red/black on a spade
-            return [Op(side, 'suit', suits) for suits in SUIT_WORDS for side in ('left', 'right')]
+            return [Op(side, 'suit', suits) for suits in SUIT_WORDS for side in ('last', 'new')]
         elif self.kind == 'suit':
             return [Op('ocmp', 'color', '=='), Op('ocmp', 'color', '!='), Op('ocmp', 'suit', '==')]
         else:
@@ -127,11 +127,11 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             (tuple(range(8, 14)), tuple(range(1, 8))),
             (('C', 'S'), ('D', 'H')),
         ]
-        for left, right in pairs:
-            if self.what == left:
-                return [Op(self.side, self.kind, right)]
-            elif self.what == right:
-                return [Op(self.side, self.kind, left)]
+        for last, new in pairs:
+            if self.what == last:
+                return [Op(self.side, self.kind, new)]
+            elif self.what == new:
+                return [Op(self.side, self.kind, last)]
         if self.kind == 'color':
             return [Op(self.side, self.kind, '==' if self.what == '!=' else '!=')]
         return []
@@ -157,8 +157,8 @@ def what(ops):
 
 all_pairs = xr.DataArray(
     data = [[[[1]*4]*13]*4]*13,
-    coords = {'leftnum': range(1,14), 'rightnum': range(1,14), 'leftsuit':['S','H','C','D'], 'rightsuit':['S','H','C','D']},
-    dims = ('leftnum', 'leftsuit', 'rightnum', 'rightsuit')
+    coords = {'lastnum': range(1,14), 'newnum': range(1,14), 'lastsuit':['S','H','C','D'], 'newsuit':['S','H','C','D']},
+    dims = ('lastnum', 'lastsuit', 'newnum', 'newsuit')
 )
 
 
@@ -187,7 +187,7 @@ SUITS = 'SHCD'
 COLORS = [('C', 'S'), ('D', 'H')]
 
 ALL_OPS = []
-for side in ['left', 'right']:
+for side in ['last', 'new']:
     for suit in SUITS:
         o = Op(side, 'suit', (suit,))
         ALL_OPS.append(o)
@@ -196,7 +196,7 @@ for side in ['left', 'right']:
         ALL_OPS.append(o)
 
 
-for side in ['left', 'right']:
+for side in ['last', 'new']:
     for name, vals in NUM_WORDS.items():
         o = Op(side, 'num', tuple(sorted(vals)))
         ALL_OPS.append(o)
