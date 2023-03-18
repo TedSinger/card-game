@@ -49,23 +49,22 @@ class Filter:
                 left_words.insert(0, o.left_word())
             else:
                 right_words.insert(0, o.right_word())
-        left_joiner = ', ' if len(left_words) > 2 else ' '
-        right_joiner = ', ' if len(right_words) > 2 else ' '
-        left_chunk = left_joiner.join(left_words)
-        right_chunk = right_joiner.join(right_words)
-        left_particle = 'an' if left_words[0] in ('even', 'odd') else 'a'
-        right_particle = 'an' if right_words[0] in ('even', 'odd') else 'a'
-        left_chunk = left_particle + ' ' + left_chunk
-        right_chunk = right_particle + ' ' + right_chunk
-        omit_left_card = left_words[-1] in ('spade', 'heart', 'diamond', 'club')
-        omit_right_card = right_words[-1] in ('spade', 'heart', 'diamond', 'club')
-        if not omit_left_card:
-            left_chunk += ' card'
-        if not omit_right_card:
-            right_chunk += ' card'
+        left_chunk = _fmt_words(left_words)
+        right_chunk = _fmt_words(right_words)
         all_chunks = ["You may not play", right_chunk, "on", left_chunk]
         return " ".join([c for c in all_chunks if c])
 
+
+
+def _fmt_words(words):
+    joiner = ', ' if len(words) > 2 else ' '
+    chunk = joiner.join(words)
+    particle = 'an' if words[0] in ('even', 'odd') else 'a'
+    chunk = particle + ' ' + chunk
+    omit_card = words[-1] in ('spade', 'heart', 'diamond', 'club')
+    if not omit_card:
+        chunk += ' card'
+    return chunk
 
 def nullities(xarr):
     # want to check it does not make it impossible to place or place on certain cards
@@ -110,7 +109,7 @@ def cards():
                 yield f
 
 
-c = list(cards())
+FILTERS = list(cards())
 # at ~156 rules. 0.66% of rule pairings have high overlap
 # excluding the worst behaving rules brought this down to 0.26%
 
