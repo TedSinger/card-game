@@ -13,10 +13,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             else:
                 return f'different {self.kind}' if self.what == '!=' else f'same {self.kind}'
         else:
-            if self.kind == 'suit':
-                return SUIT_WORDS[self.what]
-            else:
-                return [k for k, v in NUM_WORDS.items() if v == self.what][0]
+            return [k for k, v in WORDS.items() if v == self.what][0]
 
     def last_word(self):
         if self.what == '<':
@@ -96,7 +93,8 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
     def bad_representations(self) -> list['Op']:
         if self.side == 'ocmp' and self.kind == 'color':
             # same/different color on a spade -> red/black on a spade
-            return [Op(side, 'suit', suits) for suits in SUIT_WORDS for side in ('last', 'new')]
+            # len(suits) == 2 is an awful hack
+            return [Op(side, 'suit', suits) for word, suits in WORDS.items() for side in ('last', 'new') if len(suits) == 2]
         elif self.kind == 'suit':
             return [Op('ocmp', 'color', '=='), Op('ocmp', 'color', '!='), Op('ocmp', 'suit', '==')]
         else:
@@ -145,7 +143,8 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
             elif self.kind == 'suit' and self.what == '==':
                 ret.append(Op(self.side, 'color', '!='))
         elif self.kind == 'suit':
-            ret.extend([Op(self.side, 'suit', suit) for suit in SUIT_WORDS if len(set(suit) & set(self.what)) == 0])
+            # len(suit) < 3 is an awful hack
+            ret.extend([Op(self.side, 'suit', suit) for word, suit in WORDS.items() if len(set(suit) & set(self.what)) == 0 and len(suit) < 3])
         elif self.what == (11,12,13):
             ret.append(Op(self.side, 'num', tuple(range(1, 8))))
         elif self.what == tuple(range(1, 8)):
@@ -162,16 +161,7 @@ all_pairs = xr.DataArray(
 )
 
 
-SUIT_WORDS = {
-    ('S',): 'spade',
-    ('C',): 'club',
-    ('D',): 'diamond',
-    ('H',): 'heart',
-    ('D', 'H'): 'red', # caring about order within a color is a bug waiting to happen
-    ('C', 'S'): 'black'
-}
-# FIXME: one of these two is backwards
-NUM_WORDS = {
+WORDS = {
     'odd': tuple(range(1, 14))[::2],
     'even': tuple(range(1, 14))[1::2],
     'high': tuple(range(8, 14)),
@@ -179,26 +169,22 @@ NUM_WORDS = {
     'face': (11, 12, 13),
     'quartet': (4, 8, 12),
     'trio': (3, 6, 9, 12),
+    'spade': ('S',),
+    'club': ('C',),
+    'diamond': ('D',),
+    'heart': ('H',),
+    'red': ('D', 'H'),
+    'black': ('C', 'S'),    
 }
 
 ADJECTIVE_ORDER = ['high', 'low', 'odd', 'even', 'red', 'black', 'quartet', 'trio', 'spade','heart','diamond','club', 'face']
 
-SUITS = 'SHCD'
-COLORS = [('C', 'S'), ('D', 'H')]
 
 ALL_OPS = []
 for side in ['last', 'new']:
-    for suit in SUITS:
-        o = Op(side, 'suit', (suit,))
-        ALL_OPS.append(o)
-    for color in COLORS:
-        o = Op(side, 'suit', color)
-        ALL_OPS.append(o)
-
-
-for side in ['last', 'new']:
-    for name, vals in NUM_WORDS.items():
-        o = Op(side, 'num', tuple(sorted(vals)))
+    for name, vals in WORDS.items():
+        kind = 'num' if len(vals) >= 3 else 'suit'
+        o = Op(side, kind, vals)
         ALL_OPS.append(o)
 ALL_OPS.extend([
     Op('ocmp', 'num', '>'),
