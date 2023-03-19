@@ -4,7 +4,7 @@ from itertools import combinations
 import random
 
 
-class Filter:    
+class Rule:
     def __init__(self, ops, xarr):
         self.ops = unify(ops)
         assert isinstance(self.ops, tuple)
@@ -19,10 +19,10 @@ class Filter:
         xarr = ops[0].xarr().copy()
         for o in ops[1:]:
             xarr &= o.xarr()
-        return Filter(ops, xarr)
+        return Rule(ops, xarr)
 
     def __and__(self, other):
-        return Filter(self.ops + other.ops, self.xarr & other.xarr)
+        return Rule(self.ops + other.ops, self.xarr & other.xarr)
     def __repr__(self):
         return f'{self.ops} - {self.size}'
     @property
@@ -79,7 +79,7 @@ def unify(ops):
     return tuple(sorted(ret))
 
 
-def cards():
+def gen_rules():
     combos = list(combinations(ALL_OPS, 3))
     random.shuffle(combos)
     blacklist = set()
@@ -93,7 +93,7 @@ def cards():
             enemies = sum([o.disjoints() + o.bad_representations() for o in ops], [])
             if len(set(enemies) & set(ops)) > 1:
                 continue
-            f = Filter.from_ops(c)
+            f = Rule.from_ops(c)
             if f.size_ok() and f.is_conditional():
                 for i, this_op in enumerate(ops):
                     if this_op.side in f.lonely_sides():
@@ -104,7 +104,7 @@ def cards():
                 yield f
 
 
-FILTERS = list(cards())
+RULES = list(gen_rules())
 # at ~156 rules. 0.66% of rule pairings have high overlap
 # excluding the worst behaving rules brought this down to 0.26%
 

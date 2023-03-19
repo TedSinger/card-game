@@ -93,8 +93,8 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
     def bad_representations(self) -> list['Op']:
         if self.side == 'ocmp' and self.kind == 'color':
             # same/different color on a spade -> red/black on a spade
-            # len(suits) == 2 is an awful hack
-            return [Op(side, 'suit', suits) for word, suits in WORDS.items() for side in ('last', 'new') if len(suits) == 2]
+            # len(suits) <= 2 is an awful hack
+            return [Op(side, 'suit', suits) for word, suits in WORDS.items() for side in ('last', 'new') if len(suits) <= 2]
         elif self.kind == 'suit':
             return [Op('ocmp', 'color', '=='), Op('ocmp', 'color', '!='), Op('ocmp', 'suit', '==')]
         else:
@@ -167,8 +167,8 @@ WORDS = {
     'high': tuple(range(8, 14)),
     'low': tuple(range(1, 8)),
     'face': (11, 12, 13),
-    'quartet': (4, 8, 12),
-    'trio': (3, 6, 9, 12),
+    # 'quartet': (4, 8, 12), these give about 16 new rules, total
+    # 'trio': (3, 6, 9, 12),
     'spade': ('S',),
     'club': ('C',),
     'diamond': ('D',),

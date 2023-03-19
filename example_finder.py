@@ -13,7 +13,33 @@ class Example:
         return f"{self.lastnum}{self.lastsuit}->{self.newnum}{self.newsuit}, {self.inverted_ops}"
 
     def as_text(self):
-        return f""
+        if self.inverted_ops:
+            o = self.inverted_ops[0]
+            if o.side == 'ocmp':
+                if o.kind in ('color', 'suit'):
+                    matched_word = 'the same' if o.what == '==' else 'different'
+                    unmatched_word = 'the same' if o.what == '!=' else 'a different'
+                    return f"OK! The new card is {unmatched_word} {o.kind}, not {matched_word}"
+                else:
+                    # FIXME: somehow connect this with the Rule.as_text(), where the higher/lower gets moved around
+                    unmatched_word = 'lower' if o.new_word() == 'higher' else 'higher'
+                    return f"OK! The new card is {unmatched_word}, not {o.new_word()}"
+            else:
+                for c in o.complements():
+                    return f"OK! The {o.side} card is {c.word}, not {o.word}"
+                if o.kind == 'suit':
+                    if o.side == 'last':
+                        word = self.lastsuit
+                    else:
+                        word = self.newsuit
+                else:
+                    if o.side == 'last':
+                        word = self.lastnum
+                    else:
+                        word = self.newnum
+                return f"OK! The {o.side} card is {word}, not {o.word}"
+        else:
+            return f"ILLEGAL"
 
 class ExampleFinder:
     def __init__(self):
