@@ -55,6 +55,22 @@ class Rule:
         return " ".join([c for c in all_chunks if c])
 
 
+    def as_svg(self, e):
+        # TODO: background template
+        # TODO: top text scaled, font, legible
+        # TODO: big red NO sign
+        # TODO: ok_examples spaced nicely
+        illegal_example, *ok_examples = e.get_examples(self)
+        header = '''<svg width="889" height="571">
+            <rect x="5" y="5" rx="5" ry="5" width="879" height="161" fill="peachpuff"/>
+            <rect x="5" y="171" rx="5" ry="5" width="437" height="395" fill="skyblue"/>
+            <rect x="447" y="171" rx="5" ry="5" width="437" height="395" fill="tan"/>'''
+        text = f'<text x="50%" y="85" font-size="40" text-anchor="middle">{self.as_text()}</text>'
+        i = illegal_example.as_svg_elems(447/2 - 65, 405 / 2 - 85 + 166)
+        es = [o.as_svg_elems(500 + 100 * i, 200 + 100*i) for i, o in enumerate(ok_examples)]
+        footer = '</svg>'
+        return '\n'.join([header, text, i, *es, footer])
+
 
 def _fmt_words(words):
     joiner = ', ' if len(words) > 2 else ' '

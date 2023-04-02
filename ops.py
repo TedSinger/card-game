@@ -167,7 +167,7 @@ WORDS = {
     'high': tuple(range(8, 14)),
     'low': tuple(range(1, 8)),
     'face': (11, 12, 13),
-    # 'quartet': (4, 8, 12), these give about 16 new rules, total
+    # 'quartet': (4, 8, 12), these give about 16 new rules, total. not necessary or worth the player confusion
     # 'trio': (3, 6, 9, 12),
     'spade': ('S',),
     'club': ('C',),
