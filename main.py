@@ -1,31 +1,31 @@
 from collections import Counter
-from ops import ALL_OPS, Op, all_pairs, ADJECTIVE_ORDER
+from conds import ALL_OPS, Cond, all_pairs, ADJECTIVE_ORDER
 from itertools import combinations
 import random
 
 
-class Rule:
-    def __init__(self, ops, xarr):
-        self.ops = unify(ops)
-        assert isinstance(self.ops, tuple)
-        assert all(isinstance(o, Op) for o in self.ops)
-        self.last_ops = [o for o in self.ops if o.side == "last"]
-        self.ocmp_ops = [o for o in self.ops if o.side == "ocmp"]
-        self.new_ops = [o for o in self.ops if o.side == "new"]
+class RuleCard:
+    def __init__(self, conds, xarr):
+        self.conds = unify(conds)
+        assert isinstance(self.conds, tuple)
+        assert all(isinstance(c, Cond) for c in self.conds)
+        self.last_conds = [c for c in self.conds if c.side == "last"]
+        self.comp_conds = [c for c in self.conds if c.side == "comp"]
+        self.new_conds = [c for c in self.conds if c.side == "new"]
         self.xarr = xarr
 
     @classmethod
-    def from_ops(self, ops):
-        xarr = ops[0].xarr().copy()
-        for o in ops[1:]:
-            xarr &= o.xarr()
-        return Rule(ops, xarr)
+    def from_conds(self, conds):
+        xarr = conds[0].xarr().copy()
+        for c in conds[1:]:
+            xarr &= c.xarr()
+        return RuleCard(conds, xarr)
 
     def __and__(self, other):
-        return Rule(self.ops + other.ops, self.xarr & other.xarr)
+        return RuleCard(self.conds + other.conds, self.xarr & other.xarr)
 
     def __repr__(self):
-        return f"{self.ops} - {self.size}"
+        return f"{self.conds} - {self.size}"
 
     @property
     def size(self):
@@ -39,20 +39,20 @@ class Rule:
         return 270 < self.size < 405
 
     def lonely_sides(self):
-        sides = Counter([side for side, *_ in self.ops])
+        sides = Counter([side for side, *_ in self.conds])
         return [s for s, c in sides.items() if c == 1]
 
     def is_conditional(self):
-        return self.ocmp_ops or (self.last_ops and self.new_ops)
+        return self.comp_conds or (self.last_conds and self.new_conds)
 
     def as_text(self):
-        last_words = sorted([o.word for o in self.last_ops], key=ADJECTIVE_ORDER.index)
-        new_words = sorted([o.word for o in self.new_ops], key=ADJECTIVE_ORDER.index)
-        for o in self.ocmp_ops:
+        last_words = sorted([c.word for c in self.last_conds], key=ADJECTIVE_ORDER.index)
+        new_words = sorted([c.word for c in self.new_conds], key=ADJECTIVE_ORDER.index)
+        for c in self.comp_conds:
             if len(last_words) < len(new_words):
-                last_words.insert(0, o.last_word())
+                last_words.insert(0, c.last_word())
             else:
-                new_words.insert(0, o.new_word())
+                new_words.insert(0, c.new_word())
         last_chunk = _fmt_words(last_words)
         new_chunk = _fmt_words(new_words)
         all_chunks = ["You may not play", new_chunk, "on", last_chunk]
@@ -71,8 +71,8 @@ class Rule:
         text = f'<text x="50%" y="85" font-size="40" text-anchor="middle">{self.as_text()}</text>'
         i = illegal_example.as_svg_elems(447 / 2 - 65, 405 / 2 - 85 + 166)
         es = [
-            o.as_svg_elems(500 + 100 * i, 200 + 100 * i)
-            for i, o in enumerate(ok_examples)
+            c.as_svg_elems(500 + 100 * i, 200 + 100 * i)
+            for i, c in enumerate(ok_examples)
         ]
         footer = "</svg>"
         return "\n".join([header, text, i, *es, footer])
@@ -89,15 +89,15 @@ def _fmt_words(words):
     return chunk
 
 
-def unify(ops):
+def unify(conds):
     ret = []
-    for o in ops:
+    for c in conds:
         dominated = False
-        for stricter in o.overlaps():
-            if stricter in ops:
+        for stricter in c.overlaps():
+            if stricter in conds:
                 dominated = True
         if not dominated:
-            ret.append(o)
+            ret.append(c)
     return tuple(sorted(ret))
 
 
@@ -106,27 +106,27 @@ def gen_rules():
     random.shuffle(combos)
     blacklist = set()
     for c in combos:
-        ops = tuple(sorted(unify(c)))
-        if ops in blacklist:
+        conds = tuple(sorted(unify(c)))
+        if conds in blacklist:
             continue
-        elif Op.clashes(ops):
+        elif Cond.clashes(conds):
             continue
         else:
-            enemies = sum([o.disjoints() + o.bad_representations() for o in ops], [])
-            if len(set(enemies) & set(ops)) > 1:
+            enemies = sum([c.disjoints() + c.bad_representations() for c in conds], [])
+            if len(set(enemies) & set(conds)) > 1:
                 continue
-            f = Rule.from_ops(c)
+            f = RuleCard.from_conds(c)
             if f.size_ok() and f.is_conditional():
-                for i, this_op in enumerate(ops):
+                for i, this_op in enumerate(conds):
                     if this_op.side in f.lonely_sides():
                         for a in this_op.complements():
-                            blacklist_ops = [*ops]
-                            blacklist_ops[i] = a
-                            blacklist.add(tuple(sorted(blacklist_ops)))
+                            blacklist_conds = [*conds]
+                            blacklist_conds[i] = a
+                            blacklist.add(tuple(sorted(blacklist_conds)))
                 yield f
 
 
-RULES = list(gen_rules())
+RULE_CARDS = list(gen_rules())
 # at ~156 rules. 0.66% of rule pairings have high overlap
 # excluding the worst behaving rules brought this down to 0.26%
 

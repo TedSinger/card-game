@@ -3,11 +3,11 @@ from collections import Counter, namedtuple
 from itertools import combinations
 
 
-class Op(namedtuple("Op", ["side", "kind", "what"])):
+class Cond(namedtuple("Cond", ["side", "kind", "what"])):
     # FIXME: maybe START with the word and lookup the implementation
     @property
     def word(self):
-        if self.side == "ocmp":
+        if self.side == "comp":
             if self.kind == "num":
                 # the word is describing the last card
                 return "lower" if self.what == "<" else "higher"
@@ -39,7 +39,7 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
     def xarr(self):
         if not hasattr(self, "_xarr"):
             x = all_pairs.copy()
-            if self.side == "ocmp":
+            if self.side == "comp":
                 if self.kind == "num":
                     if self.what == ">":
                         mask = x.lastnum > x.newnum
@@ -63,78 +63,78 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
         return self._xarr
 
     @classmethod
-    def clashes(cls, ops) -> bool:
+    def clashes(cls, conds) -> bool:
         # various pathologies. causes some cards to be too difficult to play on
-        last_ops = [o for o in ops if o.side == "last"]
-        ocmp_ops = [o for o in ops if o.side == "ocmp"]
-        new_ops = [o for o in ops if o.side == "new"]
-        for group in last_ops, new_ops:
+        last_conds = [c for c in conds if c.side == "last"]
+        comp_conds = [c for c in conds if c.side == "comp"]
+        new_conds = [c for c in conds if c.side == "new"]
+        for group in last_conds, new_conds:
             for op1, op2 in combinations(group, 2):
                 if op1.kind == op2.kind == "num":
                     if len(set(op1.what) & set(op2.what)) < 3:
                         # Ex. even high card -> (12,), confusingly narrow
                         return True
-        if (11, 12, 13) in what(ops) and ("<" in what(ops) or ">" in what(ops)):
+        if (11, 12, 13) in what(conds) and ("<" in what(conds) or ">" in what(conds)):
             return True
         elif (
-            len(ocmp_ops) == 1
-            and ocmp_ops[0].kind == "num"
-            and last_ops
-            and not new_ops
+            len(comp_conds) == 1
+            and comp_conds[0].kind == "num"
+            and last_conds
+            and not new_conds
         ):
             # Motivation: "You may not play a higher card on a spade" - well then what to do on low spade?
             allowed_numbers = set(range(1, 14))
-            for o in last_ops:
-                if o.kind == "num":
-                    allowed_numbers &= set(o.what)
-            ocmp = ocmp_ops[0]
-            if ocmp.what == "<":
+            for c in last_conds:
+                if c.kind == "num":
+                    allowed_numbers &= set(c.what)
+            comp = comp_conds[0]
+            if comp.what == "<":
                 return min(allowed_numbers) < 4
             else:
                 return max(allowed_numbers) > 10
         else:
-            # last_ops and new_ops -> conditions on both sides. no pathologies
-            # new_ops and not last_ops -> it's actually ok for some cards to be nearly unplayable.
+            # last_conds and new_conds -> conditions on both sides. no pathologies
+            # new_conds and not last_conds -> it's actually ok for some cards to be nearly unplayable.
             # it is the player's job to identify and get rid of those
             return False
 
-    def bad_representations(self) -> list["Op"]:
-        if self.side == "ocmp" and self.kind == "color":
+    def bad_representations(self) -> list["Cond"]:
+        if self.side == "comp" and self.kind == "color":
             # same/different color on a spade -> red/black on a spade
             # len(suits) <= 2 is an awful hack
             return [
-                Op(side, "suit", suits)
+                Cond(side, "suit", suits)
                 for word, suits in WORDS.items()
                 for side in ("last", "new")
                 if len(suits) <= 2
             ]
         elif self.kind == "suit":
             return [
-                Op("ocmp", "color", "=="),
-                Op("ocmp", "color", "!="),
-                Op("ocmp", "suit", "=="),
+                Cond("comp", "color", "=="),
+                Cond("comp", "color", "!="),
+                Cond("comp", "suit", "=="),
             ]
         else:
             return []
 
-    def overlaps(self) -> list["Op"]:
-        # Any Op that is stricter than this one
+    def overlaps(self) -> list["Cond"]:
+        # Any Cond that is stricter than this one
         # this & other == other and this | other == this
         if self.what == ("D", "H"):
-            return [Op(self.side, self.kind, ("D",)), Op(self.side, self.kind, ("H",))]
+            return [Cond(self.side, self.kind, ("D",)), Cond(self.side, self.kind, ("H",))]
         elif self.what == ("C", "S"):
-            return [Op(self.side, self.kind, ("C",)), Op(self.side, self.kind, ("S",))]
-        elif self.side == "ocmp" and self.kind == "color" and self.what == "==":
-            return [Op(self.side, "suit", "==")]
+            return [Cond(self.side, self.kind, ("C",)), Cond(self.side, self.kind, ("S",))]
+        elif self.side == "comp" and self.kind == "color" and self.what == "==":
+            return [Cond(self.side, "suit", "==")]
         elif self.word == "high":
-            return [Op(self.side, self.kind, (11, 12, 13))]
+            return [Cond(self.side, self.kind, (11, 12, 13))]
         elif self.word == "even":
-            return [Op(self.side, self.kind, (4, 8, 12))]
+            return [Cond(self.side, self.kind, (4, 8, 12))]
         else:
             return []
 
-    def complements(self) -> list["Op"]:
-        # Any Op that is the opposite of this one
+    def complements(self) -> list["Cond"]:
+        # Any Cond that is the opposite of this one
         # this & other == null and this | other == all
         pairs = [
             (">", "<"),
@@ -144,39 +144,39 @@ class Op(namedtuple("Op", ["side", "kind", "what"])):
         ]
         for last, new in pairs:
             if self.what == last:
-                return [Op(self.side, self.kind, new)]
+                return [Cond(self.side, self.kind, new)]
             elif self.what == new:
-                return [Op(self.side, self.kind, last)]
+                return [Cond(self.side, self.kind, last)]
         if self.kind == "color":
-            return [Op(self.side, self.kind, "==" if self.what == "!=" else "!=")]
+            return [Cond(self.side, self.kind, "==" if self.what == "!=" else "!=")]
         return []
 
-    def disjoints(self) -> list["Op"]:
+    def disjoints(self) -> list["Cond"]:
         # this & other == null
         ret = []
-        if self.side == "ocmp":
+        if self.side == "comp":
             if self.kind == "color" and self.what == "!=":
-                ret.append(Op(self.side, "suit", "=="))
+                ret.append(Cond(self.side, "suit", "=="))
             elif self.kind == "suit" and self.what == "==":
-                ret.append(Op(self.side, "color", "!="))
+                ret.append(Cond(self.side, "color", "!="))
         elif self.kind == "suit":
             # len(suit) < 3 is an awful hack
             ret.extend(
                 [
-                    Op(self.side, "suit", suit)
+                    Cond(self.side, "suit", suit)
                     for word, suit in WORDS.items()
                     if len(set(suit) & set(self.what)) == 0 and len(suit) < 3
                 ]
             )
         elif self.what == (11, 12, 13):
-            ret.append(Op(self.side, "num", tuple(range(1, 8))))
+            ret.append(Cond(self.side, "num", tuple(range(1, 8))))
         elif self.what == tuple(range(1, 8)):
-            ret.append(Op(self.side, "num", (11, 12, 13)))
+            ret.append(Cond(self.side, "num", (11, 12, 13)))
         return ret + self.complements()
 
 
-def what(ops):
-    return [o.what for o in ops]
+def what(conds):
+    return [c.what for c in conds]
 
 
 all_pairs = xr.DataArray(
@@ -228,14 +228,14 @@ ALL_OPS = []
 for side in ["last", "new"]:
     for name, vals in WORDS.items():
         kind = "num" if len(vals) >= 3 else "suit"
-        o = Op(side, kind, vals)
-        ALL_OPS.append(o)
+        c = Cond(side, kind, vals)
+        ALL_OPS.append(c)
 ALL_OPS.extend(
     [
-        Op("ocmp", "num", ">"),
-        Op("ocmp", "num", "<"),
-        Op("ocmp", "suit", "=="),
-        Op("ocmp", "color", "!="),
-        Op("ocmp", "color", "=="),
+        Cond("comp", "num", ">"),
+        Cond("comp", "num", "<"),
+        Cond("comp", "suit", "=="),
+        Cond("comp", "color", "!="),
+        Cond("comp", "color", "=="),
     ]
 )

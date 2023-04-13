@@ -70,11 +70,11 @@ class ExampleFinder:
         # FIXME: would like the set of examples to have as few differences as possible
         true_example = self._find(f.xarr)
         examples = [Example(*true_example)]
-        for op in f.ops:
-            other_ops = [o for o in f.ops if o != op]
-            xarr = 1 - op.xarr()
-            for o in other_ops:
-                xarr &= o.xarr()
+        for cond in f.conds:
+            other_conds = [c for c in f.conds if c != cond]
+            xarr = 1 - cond.xarr()
+            for c in other_conds:
+                xarr &= c.xarr()
             if xarr.any():
                 # last low, >, new low will have no counterexamples violating only new low
                 # FIXME: last DH, suit==, new DH doesn't get the full suite of counterexamples, but it could
