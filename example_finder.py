@@ -30,7 +30,7 @@ class Example:
         self.newsuit = newsuit
 
     def __repr__(self):
-        return f"{self.lastnum}{self.lastsuit}->{self.newnum}{self.newsuit}, {self.inverted_ops}"
+        return f"{card_to_unicode(self.lastnum, self.lastsuit)}->{card_to_unicode(self.newnum, self.newsuit)}"
 
     def as_svg_elems(self, x, y):
         return card_to_svg(self.lastnum, self.lastsuit, x, y + 60) + '\n' + card_to_svg(self.newnum, self.newsuit, x + 50, y)
