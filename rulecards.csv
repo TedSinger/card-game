@@ -1,163 +1,165 @@
 text,positive_example,negative_example_1,negative_example_2,negative_example_3
-You may not play an even red card on a red card,🃈->🃈,🃝->🃈,🂹->🂷,🂻->🂤
-You may not play a higher odd card on a different color card,🃁->🃕,🂤->🃈,🂥->🃛,🃊->🃓
-You may not play a black card on a same suit card,🂣->🂥,🂲->🂺,🂱->🂧
-You may not play a red card on an even red card,🃆->🂸,🂳->🂴,🃝->🂹,🃂->🂭
-You may not play a lower same color card on an even card,🂺->🂶,🂫->🃚,🃊->🂡,🂨->🂮
-You may not play an even card on an odd black card,🃛->🃊,🂢->🃊,🃁->🃝,🃑->🃙
-You may not play a lower different color card on an even card,🃄->🂣,🃋->🂧,🂤->🂢,🃚->🃎
-You may not play a lower odd card on a black card,🂮->🃉,🃉->🃁,🂨->🂤,🃑->🂷
-You may not play a lower odd card on a different color card,🂴->🃓,🂾->🂤,🃞->🂩,🃆->🃞
-You may not play an odd black card on an even card,🂺->🂣,🂩->🂫,🃝->🂪,🂺->🃋
-You may not play a spade on an even card,🃘->🂩,🃛->🂪,🂨->🃝
-You may not play a club on a higher card,🃍->🃑,🃙->🂶,🃉->🃞
-You may not play a higher different color card on an odd card,🃁->🃖,🃊->🂮,🃃->🃋,🃞->🂾
-You may not play a high even card on a high card,🃙->🂸,🃂->🃈,🂪->🃋,🃉->🃒
-You may not play a low black card on an even card,🃆->🃕,🂧->🂥,🃚->🂪,🃒->🂴
-You may not play an even black card on a higher card,🃞->🂤,🂶->🂥,🃝->🃊,🃓->🃔
-You may not play a lower black card on a black card,🂢->🃑,🂻->🃙,🂩->🂸,🃒->🃛
-You may not play a heart on a higher card,🃉->🂸,🃍->🂦,🂩->🂽
-You may not play a heart on an odd card,🃇->🂴,🃚->🂲,🂫->🃙
-You may not play a face card on an odd card,🃗->🃋,🂭->🃎,🃎->🂦
-You may not play a low card on an odd black card,🃙->🃒,🂢->🃁,🃇->🃂,🂣->🃞
-You may not play a low even card on a same color card,🂱->🂶,🂶->🃍,🂦->🃑,🃂->🃒
-You may not play a low card on a same suit card,🃗->🃖,🂱->🂺,🂮->🃂
-You may not play a club on a low card,🂱->🃒,🃚->🃚,🂵->🂲
-You may not play a low red card on a low card,🃄->🂵,🂾->🃂,🃔->🃈,🃆->🃑
-You may not play a red card on a diamond,🃆->🂲,🂺->🃎,🃂->🂡
-You may not play a same color card on a low even card,🃄->🂶,🂨->🃙,🂵->🂺,🂦->🂴
-You may not play a lower low card on a low card,🂦->🂢,🂫->🃑,🂢->🃖
-You may not play a high odd card on a same color card,🃝->🂮,🃍->🂸,🂩->🃗,🃈->🃛
-You may not play a high card on an even black card,🃚->🃘,🃑->🂺,🂶->🂺,🂨->🂵
-You may not play a club on an even card,🂦->🃒,🂧->🃝,🂽->🃉
-You may not play a low odd card on an even card,🃊->🃁,🂹->🃃,🃚->🂾,🂶->🂲
-You may not play a low red card on a red card,🃍->🃃,🂪->🃃,🃆->🂹,🃉->🂥
-You may not play a same color high card on a high card,🂽->🂽,🂧->🂪,🂭->🂦,🂪->🂺
-You may not play a black card on an even black card,🂦->🂣,🃑->🃞,🂸->🃛,🃔->🂶
-You may not play a same suit card on a high card,🃎->🃋,🂱->🂵,🂪->🂵
-You may not play an odd card on a heart,🂺->🂵,🃃->🂾,🂷->🂤
-You may not play a higher card on a same suit card,🃘->🃛,🃋->🃃,🃑->🂨
-You may not play an even card on a high black card,🂭->🂭,🂥->🂲,🂸->🂶,🃝->🂻
-You may not play a club on a red card,🃃->🃑,🂥->🃕,🂻->🂭
-You may not play an odd black card on a lower card,🃃->🃞,🃂->🃘,🃂->🂾,🂴->🃑
-You may not play a lower even card on a red card,🃈->🂲,🂪->🃖,🂷->🃕,🃋->🃝
-You may not play a different color odd card on a high card,🂨->🂾,🃄->🂫,🃞->🃂,🂭->🂣
-You may not play a high red card on a low card,🂦->🃋,🂪->🂻,🂶->🂳,🂳->🃛
-You may not play a same color odd card on an even card,🃘->🂧,🃛->🂣,🂤->🃒,🃔->🂷
-You may not play a lower black card on an odd card,🃞->🃗,🃝->🂢,🃉->🃄,🂻->🃛
-You may not play a low even card on a black card,🂡->🃔,🃇->🃆,🃒->🃘,🂡->🃕
-You may not play a diamond on a low card,🃑->🃂,🂾->🃎,🃑->🂣
-You may not play a higher odd card on a red card,🂴->🃛,🂨->🃎,🂵->🃝,🃉->🂷
-You may not play an odd card on a same suit card,🃉->🃋,🃋->🃆,🃇->🃙
-You may not play a spade on a low card,🂳->🂡,🂪->🂧,🃔->🂹
-You may not play a diamond on a lower card,🃕->🃈,🂧->🂫,🂩->🃈
-You may not play a high odd card on an even card,🃔->🃛,🂣->🂩,🂤->🂺,🃆->🃓
-You may not play a high card on a low black card,🃔->🂽,🂨->🂻,🂳->🃙,🂤->🂡
-You may not play a low even card on an odd card,🃉->🃆,🂶->🂴,🃅->🃊,🂩->🃅
-You may not play an odd red card on a high card,🃉->🃅,🂢->🃃,🃚->🂽,🂾->🂧
-You may not play a high red card on a red card,🂵->🂹,🂤->🃍,🃂->🃃,🂳->🂪
-You may not play an odd black card on a low card,🂢->🂮,🃍->🂥,🂥->🂦,🂤->🂾
-You may not play a high red card on an even card,🃍->🃋,🂾->🂺,🂺->🂲,🂴->🃘
-You may not play an even card on an even black card,🂪->🂽,🃛->🃝,🂺->🃂,🂢->🃇
-You may not play an odd red card on a higher card,🃙->🃅,🂫->🃈,🃔->🂡,🂽->🃎
-You may not play a low even card on a low card,🃓->🂦,🂸->🃒,🃃->🃚,🂡->🂷
-You may not play a lower even card on an odd card,🂾->🂪,🃖->🂴,🂣->🃁,🂡->🃊
-You may not play a heart on a high card,🃈->🂷,🂶->🂶,🂪->🃇
-You may not play a higher odd card on a same color card,🂳->🂷,🂡->🃘,🃕->🂹,🃋->🃉
-You may not play a red card on a low red card,🂵->🃇,🂾->🂽,🃖->🃆,🂴->🂭
-You may not play a high even card on a black card,🂮->🂸,🃁->🂨,🃑->🃎,🂤->🂶
-You may not play an even card on a diamond,🃆->🂴,🃝->🂴,🃎->🂷
-You may not play a same color card on a high odd card,🃎->🂺,🂨->🂫,🂧->🃘,🂹->🃓
-You may not play a face card on a high card,🃞->🃍,🂱->🂾,🃊->🂵
-You may not play a high card on a high black card,🂨->🃈,🂢->🃉,🂻->🂾,🂪->🂡
-You may not play an odd red card on a black card,🃕->🃋,🂷->🂾,🃑->🃍,🂨->🂧
-You may not play a higher odd card on an odd card,🂷->🃛,🂶->🂹,🃙->🂭,🂮->🃅
-You may not play an even card on a spade,🂡->🂴,🃞->🃒,🂣->🃕
-You may not play a black card on a low even card,🂶->🂮,🃘->🃚,🂵->🃕,🂦->🂶
-You may not play an even card on a low red card,🃇->🂨,🂹->🂪,🃔->🂨,🃅->🂳
-You may not play a same suit red card on a red card,🂸->🂻,🂳->🃉
-You may not play a lower odd card on a same color card,🃘->🃑,🃎->🂴,🂷->🃑,🂤->🂫
-You may not play a high odd card on a red card,🃅->🃉,🃞->🂻,🂹->🂽,🃋->🂡
-You may not play a high even card on a same color card,🃉->🃊,🂸->🂾,🂹->🂲,🂣->🂸
-You may not play an even black card on a high card,🃉->🂤,🂧->🂦,🃈->🃑,🂩->🂴
-You may not play an even card on a high odd card,🂹->🂴,🃘->🃈,🂱->🂽,🃙->🃓
-You may not play an even card on an odd red card,🃇->🃒,🂺->🃚,🃙->🂪,🂷->🃇
-You may not play a black card on a high even card,🃘->🂢,🃉->🂢,🂤->🂧,🂸->🂴
-You may not play a low card on a low even card,🃂->🃁,🂨->🃓,🃅->🃁,🃂->🂻
-You may not play a same suit card on a black card,🂮->🂫,🃈->🃆,🂦->🃞
-You may not play a high odd card on a high card,🃉->🃉,🃕->🃙,🃍->🃘,🃚->🂡
-You may not play a red card on a face card,🂾->🃃,🃇->🂷,🃝->🃒
-You may not play a face card on a different color card,🃅->🃞,🃈->🂩,🃁->🂾
-You may not play a different color card on a high even card,🃚->🃉,🂻->🂡,🃒->🃇,🃊->🃅
-You may not play a diamond on an even card,🂪->🃊,🃅->🃂,🂴->🂨
-You may not play a diamond on a black card,🂥->🃄,🃊->🃃,🂣->🂴
-You may not play a same color even card on a low card,🂣->🃔,🃘->🃒,🂢->🃓,🃆->🃝
-You may not play a different color even card on an odd card,🃇->🂭,🃝->🃍,🂵->🂩,🂥->🃝
-You may not play a red card on a high black card,🃘->🂴,🂢->🃎,🂽->🂶,🂪->🂨
-You may not play a same color high card on an odd card,🃋->🂸,🃝->🃘,🃃->🃂,🃁->🃞
-You may not play a low card on a spade,🂫->🃁,🂴->🃂,🂣->🂽
-You may not play a high black card on an odd card,🃎->🂫,🂴->🃝,🃗->🃔,🂡->🂹
-You may not play a low card on a diamond,🃍->🂶,🂻->🂤,🃁->🂭
-You may not play a high even card on an odd card,🃎->🃍,🂺->🂸,🂣->🂹,🃇->🃔
-You may not play a low card on a club,🃘->🃕,🃊->🃓,🃛->🂺
-You may not play an even black card on a black card,🂨->🃚,🂴->🃔,🂪->🃞,🂮->🂺
-You may not play an even card on a low black card,🃕->🃄,🂫->🃚,🃁->🃔,🂧->🂵
-You may not play an odd card on a face card,🃛->🃙,🃃->🂥,🂮->🂤
-You may not play a low black card on a red card,🃋->🂧,🂤->🂢,🃇->🂮,🂳->🂶
-You may not play a different color high card on a low card,🂦->🂾,🃙->🂺,🃅->🂡,🂷->🂺
-You may not play an odd card on a high even card,🂸->🃋,🂫->🂮,🂴->🃓,🃍->🃖
-You may not play a spade on a higher card,🃍->🂢,🃊->🃆,🂩->🂫
-You may not play a face card on a black card,🂭->🃞,🂺->🃋,🂧->🃚
-You may not play a different color high card on an even card,🂤->🃊,🃑->🂽,🂭->🂳,🂨->🃝
-You may not play an even red card on an odd card,🂮->🂲,🃄->🂽,🂱->🂻,🂵->🂦
-You may not play an even card on a low odd card,🂷->🂪,🃙->🂶,🃖->🂭,🃃->🂫
-You may not play a red card on a high odd card,🃞->🂾,🂽->🂲,🂥->🃆,🂻->🃑
-You may not play a red card on a high red card,🃋->🂲,🂶->🂽,🃝->🃉,🃋->🃕
-You may not play a high card on a low odd card,🂣->🂨,🂾->🂹,🃖->🂸,🃓->🃕
-You may not play a high card on a heart,🂲->🃙,🃛->🂮,🂶->🂥
-You may not play a same suit black card on a black card,🃓->🃔,🃓->🂮
-You may not play a low card on a low red card,🃃->🃖,🂹->🂱,🂡->🃇,🃇->🃛
-You may not play a high card on an odd red card,🃉->🂸,🂺->🂫,🂩->🂽,🂳->🂣
-You may not play a high card on a high odd card,🃞->🂪,🂺->🂮,🃗->🃋,🃎->🂦
-You may not play a high black card on a red card,🂾->🃛,🂤->🃛,🂳->🂤,🃈->🂻
-You may not play an even black card on an odd card,🃙->🃘,🃈->🃚,🃉->🂣,🂱->🂶
-You may not play a black card on an odd red card,🂾->🃙,🂺->🃑,🂩->🃙,🂱->🂺
-You may not play a spade on a black card,🂣->🂤,🃋->🂩,🂧->🃇
-You may not play a low card on a face card,🂾->🃂,🂺->🂡,🂻->🂸
-You may not play a higher even card on a black card,🂦->🃈,🃁->🃄,🃓->🃋,🃞->🂺
-You may not play a lower odd card on an even card,🂶->🃃,🂩->🃃,🃈->🂦,🂸->🃎
-You may not play an even red card on a high card,🃍->🃍,🂢->🂺,🂽->🃇,🃚->🂭
-You may not play a low black card on a high card,🃋->🂦,🂢->🃕,🃝->🂮,🃚->🂷
-You may not play a low card on an even red card,🂴->🂢,🃇->🃑,🂢->🂧,🂲->🂹
-You may not play a same suit card on an even card,🂤->🂮,🂳->🂽,🃂->🃗
-You may not play a red card on a spade,🂭->🂹,🃑->🂺,🂨->🃗
-You may not play a higher same color card on an even card,🂶->🂺,🃙->🂮,🃚->🂾,🂶->🂲
-You may not play a high black card on a low card,🂧->🂪,🃛->🂨,🂣->🃗,🂷->🃉
-You may not play a low red card on an even card,🂭->🂵,🃓->🂶,🂶->🂾,🃆->🂤
-You may not play a same color low card on an even card,🂦->🂣,🂮->🃒,🃚->🂮,🃝->🃅
-You may not play a black card on a heart,🂷->🂥,🃓->🃚,🂻->🂹
-You may not play a higher black card on a red card,🂴->🂥,🂣->🂮,🂸->🂹,🃇->🃗
-You may not play an odd card on a club,🃘->🃛,🃋->🃃,🃑->🂨
-You may not play a higher red card on a black card,🂡->🃋,🂹->🃍,🃚->🃛,🃗->🂶
-You may not play a heart on a black card,🃛->🂻,🂸->🂶,🂫->🃆
-You may not play an even red card on a lower card,🃃->🂽,🂡->🂾,🃂->🃘,🂹->🂸
-You may not play an odd black card on a black card,🂧->🂧,🂴->🃑,🃔->🂦,🃗->🂱
-You may not play a lower red card on an even card,🃍->🂱,🃕->🂴,🂽->🂦,🂨->🂾
-You may not play a different color low card on a high card,🂻->🂥,🂲->🃒,🂽->🂮,🃛->🃖
-You may not play a red card on an odd black card,🂫->🂸,🂦->🂳,🂷->🂶,🃙->🃔
-You may not play a low card on a high even card,🃚->🃗,🃛->🂣,🃒->🃄,🃍->🂻
-You may not play an odd red card on an odd card,🃃->🃁,🂨->🃉,🂵->🂸,🃕->🂮
-You may not play a black card on a club,🃖->🃙,🂭->🃒,🃑->🃇
-You may not play an even card on a high red card,🃍->🃈,🃁->🃂,🂫->🂺,🂾->🃎
-You may not play a higher black card on an even card,🂴->🃛,🂳->🂦,🂨->🃎,🃍->🃕
-You may not play a lower card on a same suit card,🃋->🃆,🃒->🃖,🂳->🂡
-You may not play an odd card on a low even card,🃔->🂹,🂺->🃙,🃓->🂩,🂤->🂺
-You may not play an odd card on an even red card,🃂->🂫,🂷->🂣,🂪->🃁,🂲->🂭
-You may not play a higher red card on an odd card,🂹->🂺,🂨->🂻,🂳->🃙,🃉->🃆
-You may not play a same color card on a face card,🃛->🂧,🂶->🂴,🃎->🃕
-You may not play a same color low card on a low card,🂥->🂢,🃉->🃅,🂥->🃘,🂢->🃃
-You may not play a lower red card on a red card,🃎->🂻,🂧->🂶,🂽->🃘,🃂->🃃
-You may not play a black card on a low black card,🃔->🂤,🂨->🂩,🂴->🃘,🂦->🂷
-You may not play a high card on a high red card,🂺->🂭,🂳->🂺,🂩->🂨,🂺->🃂
-You may not play a different color low card on an odd card,🃗->🃂,🃆->🃔,🂡->🂻,🂧->🃓
-You may not play a low odd card on a high card,🂭->🃓,🃂->🂱,🂻->🂫,🂹->🂤
+You may not play a lower red card on an odd card,🂧->🂵,🃓->🃃,🂴->🂳,🃅->🃑
+You may not play a red card on a heart,🂲->🃂,🃝->🃍,🂶->🃕,
+You may not play a high black card on a high card,🃈->🃞,🂴->🃚,🃝->🂧,🂩->🃎
+You may not play a heart on a lower card,🂲->🂸,🂥->🂴,🃔->🃝,
+You may not play a same suit card on an even card,🃝->🃝,🂺->🃓,🂹->🂱,
+You may not play an odd card on a face card,🃛->🃎,🂪->🃁,🂽->🂽,
+You may not play a same color even card on an even card,🃆->🂶,🃝->🂲,🃎->🂽,🃔->🂮
+You may not play an even red card on an odd card,🃃->🂴,🃒->🃊,🂣->🃃,🃋->🃝
+You may not play a diamond on an even card,🃒->🃎,🂮->🃄,🃘->🂧,
+You may not play an odd card on a high red card,🃎->🃅,🂷->🂣,🂮->🂮,🂻->🃔
+You may not play a higher black card on a red card,🃊->🂭,🂲->🂢,🂢->🂪,🂲->🂺
+You may not play a black card on a high even card,🂽->🂤,🂩->🂤,🃔->🂦,🂺->🂽
+You may not play an odd card on an even red card,🃆->🂡,🃉->🂷,🂪->🃑,🃂->🃂
+You may not play a red card on an even black card,🃖->🂱,🂧->🂻,🂸->🃇,🂨->🂭
+You may not play a low card on a low even card,🂲->🃒,🂪->🂥,🃇->🂴,🃒->🃉
+You may not play a different color odd card on an even card,🃂->🃕,🃍->🃅,🂱->🃑,🂢->🃈
+You may not play a high even card on a same color card,🃓->🂨,🃉->🂭,🃝->🂮,🂺->🃆
+You may not play a same suit card on a high card,🂩->🂪,🂫->🃝,🂥->🂨,
+You may not play an odd red card on a lower card,🃁->🃋,🂴->🃃,🃉->🂺,🃂->🂣
+You may not play a high card on an even black card,🂭->🂩,🃛->🃋,🃊->🂹,🂨->🃂
+You may not play a club on an odd card,🂡->🃛,🃘->🃙,🂮->🃋,
+You may not play a high card on a low odd card,🂵->🃞,🃙->🂸,🂦->🂾,🃇->🃒
+You may not play a different color card on a low even card,🃄->🃞,🃒->🂩,🂸->🃝,🃇->🃔
+You may not play an odd card on a high black card,🂮->🂧,🃖->🃛,🃍->🃗,🃚->🂤
+You may not play a low card on a same suit card,🃑->🃕,🂲->🂡,🃃->🃉,
+You may not play an even card on a spade,🂫->🂦,🂹->🃖,🂩->🃃,
+You may not play a low card on an odd black card,🃞->🂴,🂢->🃇,🂱->🂤,🃛->🂽
+You may not play a face card on an odd card,🂱->🃎,🃔->🃍,🂣->🃇,
+You may not play a high red card on a high card,🃋->🃍,🂢->🃍,🃎->🂳,🃝->🂪
+You may not play a black card on a face card,🂻->🂭,🂨->🃒,🂫->🂾,
+You may not play an even red card on a higher card,🃈->🃆,🂪->🃊,🃎->🃋,🃉->🃔
+You may not play a lower even card on an odd card,🃞->🂲,🂵->🃘,🂸->🂢,🃞->🃗
+You may not play a black card on a same suit card,🃝->🃒,🃅->🃞,🃍->🃄,
+You may not play an even card on a high even card,🂭->🂴,🂮->🂺,🂢->🂤,🃊->🃎
+You may not play an odd card on an odd red card,🂱->🂧,🂺->🂹,🃑->🃁,🂳->🂲
+You may not play a low even card on a black card,🃛->🃆,🃍->🂤,🂫->🂭,🃓->🂵
+You may not play a high even card on a high card,🂩->🃊,🂡->🂸,🂾->🂩,🂮->🃔
+You may not play a spade on a high card,🂩->🂡,🂱->🂦,🂸->🂹,
+You may not play a face card on a different color card,🃓->🃋,🂱->🂾,🃙->🃈,
+You may not play a red card on a high black card,🂨->🃇,🃒->🃍,🃈->🃂,🂫->🃗
+You may not play a heart on a low card,🂳->🂷,🂮->🂶,🂶->🃅,
+You may not play an even black card on a higher card,🂻->🂢,🂧->🃝,🂭->🃙,🂨->🃆
+You may not play a low card on a diamond,🃉->🃖,🃓->🂧,🃈->🃛,
+You may not play a higher even card on a same color card,🃑->🃖,🃃->🂭,🃋->🂴,🂦->🃙
+You may not play a high odd card on a same color card,🃞->🂩,🃑->🃎,🃃->🃊,🃖->🂧
+You may not play a club on a red card,🃋->🃓,🃕->🃒,🂴->🂫,
+You may not play a spade on a black card,🃒->🂭,🃄->🂩,🂢->🃉,
+You may not play a high red card on an odd card,🃕->🂻,🃝->🂾,🃅->🂴,🂵->🂮
+You may not play a higher red card on a black card,🂤->🂾,🂮->🃆,🃅->🂽,🂡->🃒
+You may not play a diamond on a lower card,🂻->🃍,🃃->🃃,🂱->🂩,
+You may not play a same color high card on an even card,🃍->🃈,🃊->🃝,🂾->🂽,🃖->🂢
+You may not play a high black card on an odd card,🂷->🂭,🂤->🂩,🃁->🃕,🃅->🃈
+You may not play a high black card on a black card,🃝->🂭,🂶->🂭,🂫->🂡,🃘->🂻
+You may not play a same suit red card on a red card,🃈->🃃,🃁->🂸
+You may not play a low even card on a low card,🃑->🂢,🃘->🂢,🃂->🂨,🂶->🂱
+You may not play a high card on a low black card,🂧->🂽,🂮->🃝,🂶->🃞,🂤->🂢
+You may not play an odd card on a low even card,🃄->🂳,🃊->🂳,🃁->🃁,🃒->🃒
+You may not play a low black card on a high card,🃈->🂧,🃗->🂤,🂹->🃘,🃍->🂶
+You may not play a high card on a high odd card,🃉->🃞,🂪->🃉,🃇->🂺,🃎->🃁
+You may not play a high card on a low red card,🃂->🂭,🃉->🃊,🃓->🃎,🃅->🃒
+You may not play an even black card on a low card,🂵->🃒,🂪->🃒,🃇->🂮,🂦->🃂
+You may not play an even black card on an odd card,🂱->🂢,🃝->🂨,🃓->🃞,🂳->🂸
+You may not play a low card on an even red card,🃍->🃆,🃎->🃒,🃝->🂴,🃂->🂮
+You may not play a same color even card on a high card,🂹->🂽,🃋->🂢,🃗->🃚,🃋->🃁
+You may not play an odd card on a heart,🂹->🂻,🃚->🃗,🂱->🂸,
+You may not play a lower different color card on an odd card,🃇->🂤,🂻->🂷,🃕->🂽,🃘->🂴
+You may not play an odd red card on an odd card,🂱->🃋,🂤->🂹,🃙->🃆,🂥->🃗
+You may not play a same suit card on a red card,🃍->🃂,🃆->🂻,🃕->🃚,
+You may not play a heart on a black card,🂤->🂳,🃄->🂴,🂤->🂥,
+You may not play a red card on a low red card,🃆->🃍,🂹->🂳,🃔->🃎,🂵->🃑
+You may not play a low odd card on an even card,🃈->🃇,🂵->🂵,🃂->🃋,🃍->🂢
+You may not play an odd black card on an even card,🃒->🃕,🃋->🃕,🂶->🃘,🃍->🃇
+You may not play a higher same color card on an odd card,🂳->🃎,🂳->🂮,🂩->🂧,🂤->🃖
+You may not play a lower odd card on a same color card,🃄->🂱,🂴->🃑,🂫->🃞,🂨->🃖
+You may not play a higher odd card on an odd card,🃇->🂩,🂣->🂳,🂴->🂥,🂥->🃈
+You may not play a same color odd card on an odd card,🃓->🃙,🃗->🃇,🂨->🂮,🂻->🃂
+You may not play a low even card on a same color card,🂽->🂴,🃔->🂶,🂹->🃍,🃋->🃅
+You may not play a low red card on a high card,🃛->🂲,🂴->🂷,🃎->🂺,🃋->🃒
+You may not play a red card on a low even card,🃔->🃋,🂽->🂾,🃅->🃋,🃒->🂥
+You may not play an odd black card on a high card,🃊->🂧,🃂->🃗,🃙->🂪,🃍->🃎
+You may not play a high odd card on a black card,🂡->🃋,🂹->🃞,🂩->🃚,🃖->🃁
+You may not play an odd black card on a red card,🃆->🂥,🃛->🂣,🂱->🃘,🃋->🂷
+You may not play a high red card on a red card,🃋->🂾,🂮->🂸,🃊->🂲,🃊->🃞
+You may not play a black card on an even red card,🂽->🂩,🂷->🃞,🃔->🂣,🃂->🂵
+You may not play a higher even card on a black card,🂫->🃍,🃘->🃂,🃃->🂺,🂢->🃓
+You may not play a red card on a low black card,🃗->🂾,🂨->🂴,🂶->🃊,🂡->🃝
+You may not play a red card on a club,🃕->🃊,🂧->🃊,🃚->🂦,
+You may not play a spade on an odd card,🂧->🂩,🂤->🂣,🂾->🃍,
+You may not play an odd red card on a black card,🃒->🂳,🃅->🃅,🂧->🃂,🂮->🂥
+You may not play a high card on a high red card,🃊->🃛,🂷->🂻,🂭->🃋,🃊->🂴
+You may not play a low red card on an even card,🃒->🃅,🂵->🂷,🂲->🃉,🂦->🂣
+You may not play a higher odd card on a red card,🃁->🃙,🃈->🃓,🂥->🂫,🂲->🃄
+You may not play an odd red card on a high card,🃚->🃃,🃂->🃎,🃈->🂲,🂭->🃛
+You may not play an odd card on an even black card,🂪->🃋,🃓->🃑,🃍->🂥,🃝->🃍
+You may not play a heart on an odd card,🃙->🂴,🃘->🂹,🃎->🃄,
+You may not play a high even card on a red card,🂵->🂺,🃓->🃚,🃊->🃋,🂲->🃖
+You may not play a low odd card on a high card,🃎->🃕,🂣->🃓,🂽->🂫,🃙->🃂
+You may not play a lower red card on a red card,🃊->🃇,🂳->🃉,🃚->🃁,🂸->🂦
+You may not play a higher red card on an even card,🃖->🂷,🃔->🃃,🃁->🂴,🂪->🂮
+You may not play a same color high card on a low card,🂵->🂾,🃃->🂪,🃎->🂽,🃂->🂶
+You may not play a club on a high card,🃙->🃞,🃆->🃘,🃞->🃇,
+You may not play an even red card on a black card,🂧->🂺,🃆->🃈,🃘->🃅,🂢->🂪
+You may not play an odd card on a low red card,🂳->🃞,🂺->🃁,🂧->🃓,🃆->🂽
+You may not play an even card on a diamond,🃁->🃍,🂺->🂽,🃆->🂡,
+You may not play a lower card on a same suit card,🃘->🃔,🃄->🃈,🂪->🃑,
+You may not play a face card on a high card,🂽->🂭,🂳->🂾,🃎->🂢,
+You may not play an even red card on a high card,🂨->🂲,🃇->🂴,🂺->🃋,🃊->🂤
+You may not play a high card on a face card,🂮->🃊,🂧->🂫,🃛->🂵,
+You may not play a high card on a club,🃔->🃈,🃉->🂭,🃛->🂱,
+You may not play a diamond on a high card,🂫->🃂,🃕->🃆,🂩->🂪,
+You may not play a same color low card on a high card,🂭->🂥,🃈->🂤,🂡->🃗,🂭->🂩
+You may not play a red card on an odd red card,🃋->🃎,🃊->🂹,🃕->🃈,🃉->🂡
+You may not play a low even card on an odd card,🂡->🂶,🂢->🂦,🃓->🃍,🃋->🂧
+You may not play a same color card on a high even card,🃍->🂵,🃘->🃈,🂩->🂣,🃒->🂩
+You may not play a high odd card on an odd card,🃞->🃋,🃚->🃙,🃇->🂭,🂹->🃑
+You may not play a lower even card on a red card,🂹->🃖,🂲->🂪,🃘->🃆,🃎->🂳
+You may not play a same color card on a high odd card,🃙->🃗,🂻->🂭,🂨->🃒,🃕->🂪
+You may not play a different color odd card on a high card,🃞->🃎,🃈->🃅,🂡->🂹,🂾->🃖
+You may not play a lower odd card on a black card,🃖->🂥,🂥->🃛,🂶->🂡,🃙->🂶
+You may not play a low red card on a black card,🂥->🂳,🃍->🃄,🃑->🃋,🂢->🂤
+You may not play a black card on a spade,🂤->🃒,🃘->🃘,🂥->🃊,
+You may not play a high card on an odd red card,🃋->🂫,🂲->🃝,🂧->🂹,🃇->🂢
+You may not play a red card on a high odd card,🂩->🃊,🃍->🂻,🂡->🃁,🂾->🃚
+You may not play an even card on an odd black card,🂡->🂸,🂦->🂦,🂵->🂴,🂣->🂫
+You may not play a diamond on a red card,🃉->🃇,🃙->🃉,🂱->🂦,
+You may not play a higher card on a same suit card,🃆->🃋,🂧->🂥,🃓->🃋,
+You may not play a lower black card on a black card,🃝->🃓,🂧->🂨,🃈->🃖,🃞->🃄
+You may not play a black card on a high red card,🃉->🃚,🂷->🃘,🃘->🂩,🂺->🂺
+You may not play a low black card on an odd card,🃅->🂡,🂢->🃒,🂳->🃚,🃇->🂱
+You may not play a high card on a heart,🂴->🃉,🂧->🃝,🂴->🂤,
+You may not play a higher different color card on an odd card,🂱->🂫,🂱->🂶,🂧->🃄,🂦->🃉
+You may not play an even card on a low odd card,🃃->🂭,🂹->🂢,🂢->🂲,🃃->🂳
+You may not play a different color low card on an odd card,🂻->🃑,🂱->🃅,🂭->🃁,🃑->🃎
+You may not play a black card on an odd black card,🃕->🃒,🃚->🃘,🃎->🂦,🂫->🃈
+You may not play a face card on a red card,🃁->🂭,🃕->🃍,🃊->🃁,
+You may not play a lower low card on a low card,🃗->🃓,🃁->🂥,🃉->🃗,
+You may not play a lower odd card on an even card,🃆->🃑,🃝->🂾,🂻->🃓,🃊->🃆
+You may not play a different color high card on a high card,🃘->🃍,🂺->🃊,🂧->🃍,🃋->🂦
+You may not play a different color card on a face card,🂮->🃆,🃛->🃖,🃅->🃝,
+You may not play a different color even card on a low card,🂥->🂽,🂡->🃖,🂪->🃈,🃁->🃓
+You may not play a same suit black card on a black card,🂣->🂥,🂧->🃞
+You may not play a higher odd card on a different color card,🃅->🂮,🂤->🂫,🂶->🃑,🂷->🂭
+You may not play a black card on a diamond,🃍->🃑,🂸->🂥,🃅->🃈,
+You may not play an even black card on a black card,🃝->🂭,🂶->🂭,🂫->🂡,🂪->🃄
+You may not play an odd black card on a higher card,🃚->🂩,🃍->🂮,🂭->🃚,🂾->🂳
+You may not play an even card on a low black card,🃕->🃄,🃚->🃈,🃂->🃘,🃔->🂳
+You may not play an odd card on a same suit card,🂧->🂧,🃉->🂵,🂸->🂴,
+You may not play a high card on a high black card,🂪->🃛,🂢->🂩,🂺->🂫,🂫->🃁
+You may not play a lower same color card on an even card,🃍->🂶,🃄->🂣,🃂->🂷,🂹->🃅
+You may not play a high odd card on a high card,🂪->🃉,🃔->🂩,🂮->🂪,🂪->🂳
+You may not play a high even card on an odd card,🃇->🂺,🃘->🃊,🂱->🃉,🂡->🂲
+You may not play a higher black card on an odd card,🂣->🃝,🃅->🃒,🃚->🂮,🂩->🂺
+You may not play a lower black card on an even card,🃂->🂡,🂢->🂨,🃞->🃒,🃖->🂳
+You may not play a spade on a higher card,🃘->🂣,🂤->🂦,🃛->🃃,
+You may not play a club on a higher card,🂻->🃘,🂴->🃞,🃛->🃁,
+You may not play a lower even card on a different color card,🃎->🃒,🂽->🃈,🃈->🃘,🂽->🃑
+You may not play a same color odd card on a low card,🃑->🂩,🃃->🃛,🂮->🃛,🃗->🃚
+You may not play an odd card on a club,🃖->🂵,🃈->🂥,🃓->🃘,
+You may not play a high card on a spade,🂩->🃈,🃑->🂭,🂣->🂧,
+You may not play an odd card on a high odd card,🂻->🂷,🂽->🃎,🃁->🂹,🂮->🂭
+You may not play a different color even card on an odd card,🃕->🂽,🃎->🃈,🃘->🂴,🂹->🃛
+You may not play a low card on a high even card,🃚->🂵,🂾->🂧,🂤->🂳,🃍->🂪
+You may not play a low black card on a red card,🃄->🃒,🂫->🂤,🂻->🂩,🃁->🃆
+You may not play a different color low card on a low card,🂵->🃑,🃁->🂱,🂺->🃑,🂱->🃚
