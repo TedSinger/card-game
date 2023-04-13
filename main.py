@@ -1,5 +1,5 @@
 from collections import Counter
-from conds import ALL_OPS, Cond, all_pairs, ADJECTIVE_ORDER
+from conds import ALL_CONDS, Cond, all_pairs, ADJECTIVE_ORDER
 from itertools import combinations
 import random
 
@@ -102,7 +102,7 @@ def unify(conds):
 
 
 def gen_rules():
-    combos = list(combinations(ALL_OPS, 3))
+    combos = list(combinations(ALL_CONDS, 3))
     random.shuffle(combos)
     blacklist = set()
     for c in combos:
@@ -117,9 +117,9 @@ def gen_rules():
                 continue
             f = RuleCard.from_conds(c)
             if f.size_ok() and f.is_conditional():
-                for i, this_op in enumerate(conds):
-                    if this_op.side in f.lonely_sides():
-                        for a in this_op.complements():
+                for i, this_cond in enumerate(conds):
+                    if this_cond.side in f.lonely_sides():
+                        for a in this_cond.complements():
                             blacklist_conds = [*conds]
                             blacklist_conds[i] = a
                             blacklist.add(tuple(sorted(blacklist_conds)))

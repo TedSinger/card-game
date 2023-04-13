@@ -69,9 +69,9 @@ class Cond(namedtuple("Cond", ["side", "kind", "what"])):
         comp_conds = [c for c in conds if c.side == "comp"]
         new_conds = [c for c in conds if c.side == "new"]
         for group in last_conds, new_conds:
-            for op1, op2 in combinations(group, 2):
-                if op1.kind == op2.kind == "num":
-                    if len(set(op1.what) & set(op2.what)) < 3:
+            for cond1, cond2 in combinations(group, 2):
+                if cond1.kind == cond2.kind == "num":
+                    if len(set(cond1.what) & set(cond2.what)) < 3:
                         # Ex. even high card -> (12,), confusingly narrow
                         return True
         if (11, 12, 13) in what(conds) and ("<" in what(conds) or ">" in what(conds)):
@@ -224,13 +224,13 @@ ADJECTIVE_ORDER = [
 ]
 
 
-ALL_OPS = []
+ALL_CONDS = []
 for side in ["last", "new"]:
     for name, vals in WORDS.items():
         kind = "num" if len(vals) >= 3 else "suit"
         c = Cond(side, kind, vals)
-        ALL_OPS.append(c)
-ALL_OPS.extend(
+        ALL_CONDS.append(c)
+ALL_CONDS.extend(
     [
         Cond("comp", "num", ">"),
         Cond("comp", "num", "<"),
