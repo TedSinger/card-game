@@ -1,7 +1,7 @@
 from collections import Counter
 from conds import ALL_CONDS, Cond, all_pairs, ADJECTIVE_ORDER
 from itertools import combinations
-import random
+import numpy
 
 
 class RuleCard:
@@ -102,8 +102,9 @@ def unify(conds):
 
 
 def gen_rules():
+    numpy.random.seed(9)
     combos = list(combinations(ALL_CONDS, 3))
-    random.shuffle(combos)
+    numpy.random.shuffle(combos)
     blacklist = set()
     for c in combos:
         conds = tuple(sorted(unify(c)))
