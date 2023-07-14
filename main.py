@@ -3,7 +3,6 @@ from conds import ALL_CONDS, Cond, all_pairs, ADJECTIVE_ORDER
 from itertools import combinations
 import numpy
 
-
 class RuleCard:
     def __init__(self, conds, xarr):
         self.conds = unify(conds)
@@ -41,6 +40,19 @@ class RuleCard:
     def lonely_sides(self):
         sides = Counter([side for side, *_ in self.conds])
         return [s for s, c in sides.items() if c == 1]
+
+    def is_canonical(self):
+        # if there is a suit or color comp, then only one side may specify suit
+        for comp in self.comp_conds:
+            if comp.kind in {'suit', 'color'}:
+                has_last_suit = any(side_comp.kind == 'suit' for side_comp in self.last_conds)
+                has_new_suit = any(side_comp.kind == 'suit' for side_comp in self.new_conds)
+                if has_last_suit and has_new_suit:
+                    return False
+                elif has_new_suit and (comp.kind == 'color' or (comp.kind == 'suit' and comp.what == '==')):
+                    return False
+        else:
+            return True
 
     def is_conditional(self):
         return self.comp_conds or (self.last_conds and self.new_conds)
@@ -117,7 +129,7 @@ def gen_rules():
             if len(set(enemies) & set(conds)) > 1:
                 continue
             f = RuleCard.from_conds(c)
-            if f.size_ok() and f.is_conditional():
+            if f.size_ok() and f.is_conditional() and f.is_canonical():
                 for i, this_cond in enumerate(conds):
                     if this_cond.side in f.lonely_sides():
                         for a in this_cond.complements():
@@ -130,23 +142,24 @@ def gen_rules():
 RULE_CARDS = list(gen_rules())
 # at ~156 rules. 0.66% of rule pairings have high overlap
 # excluding the worst behaving rules brought this down to 0.26%
-
-# bad_pairs = set()
-# for i in range(len(c)):
-#     for j in range(i+1, len(c)):
-#         overlap = (c[i].xarr & c[j].xarr).sum().item()
-#         if overlap > 51*52/16:
-#             bad_pairs.add((i,j))
-# to_remove_list = []
-# for i in range(41):
-#     w = Counter(sum(bad_pairs, ()))
-#     to_remove = w.most_common(n=1)[0][0]
-#     to_remove_list.append(to_remove)
-#     bad_pairs = [b for b in bad_pairs if to_remove not in b]
-# good_indices = set(range(len(c))) - set(to_remove_list)
-# q = [(c[last].xarr & c[new].xarr).sum().item() for last in good_indices for new in good_indices if new > last]
-# e = Counter(q)
-# sorted(e.items())
-# q = [(c[last].xarr & c[new].xarr).sum().item() for last in range(len(c)) for new in range(len(c)) if new > last]
-# e = Counter(q)
-# sorted(e.items())
+def prune_rules(rules, top_n):
+    bad_pairs = set()
+    original_overlap_counts = Counter()
+    for i in range(len(rules)):
+        for j in range(i+1, len(rules)):
+            overlap = (rules[i].xarr & rules[j].xarr).sum().item()
+            original_overlap_counts[overlap] += 1
+            if overlap > 51*52/16:
+                bad_pairs.add((i,j))
+    to_remove_list = []
+    for i in range(len(rules) - top_n):
+        w = Counter(sum(bad_pairs, ()))
+        to_remove = w.most_common(n=1)[0][0]
+        to_remove_list.append(to_remove)
+        bad_pairs = [b for b in bad_pairs if to_remove not in b]
+    good_indices = set(range(len(rules))) - set(to_remove_list)
+    q = [(rules[last].xarr & rules[new].xarr).sum().item() for last in good_indices for new in good_indices if new > last]
+    fixed = Counter(q)
+    print(sorted(fixed.items())[-15:])
+    print(sorted(original_overlap_counts.items())[-15:])
+    return [rules[i] for i in good_indices]

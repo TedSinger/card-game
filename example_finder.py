@@ -1,5 +1,5 @@
 import itertools
-import random
+import numpy
 
 
 def card_to_unicode(number, suit):
@@ -25,6 +25,17 @@ def card_to_svg(number, suit, x, y):
     text = f'<text x="{tx}" y="{ty}" fill="{color}" font-size="100">{ch}</text>'
     return rect + "\n" + text
 
+def num_to_str(num):
+    if num == 10:
+        return 'T'
+    elif num == 11:
+        return 'J'
+    elif num == 12:
+        return 'Q'
+    elif num == 13:
+        return 'K'
+    else:
+        return str(num)
 
 class Example:
     def __init__(self, lastnum, lastsuit, newnum, newsuit):
@@ -34,7 +45,8 @@ class Example:
         self.newsuit = newsuit
 
     def __repr__(self):
-        return f"{card_to_unicode(self.lastnum, self.lastsuit)}->{card_to_unicode(self.newnum, self.newsuit)}"
+        # return f"{card_to_unicode(self.lastnum, self.lastsuit)}->{card_to_unicode(self.newnum, self.newsuit)}"
+        return f"{num_to_str(self.newnum)}{self.newsuit}{num_to_str(self.lastnum)}{self.lastsuit}"
 
     def as_svg_elems(self, x, y):
         return (
@@ -47,7 +59,8 @@ class Example:
 class ExampleFinder:
     def __init__(self):
         all_pairs = list(itertools.product(range(1, 14), "SHDC", range(1, 14), "SHDC"))
-        random.shuffle(all_pairs)
+        numpy.random.seed(9)
+        numpy.random.shuffle(all_pairs)
         self._pairs = itertools.cycle(all_pairs)
 
     def _find(self, xarr):
